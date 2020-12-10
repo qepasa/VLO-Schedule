@@ -7,22 +7,22 @@ import {
   useRouteMatch,
   useParams
 } from "react-router-dom";
-import Schedule from "./components/Schedule";
+import TimetableComponent from "./components/TimetableComponent";
 
 export default function App() {
   return (
     <Router>
       <div>
         <ul>
-          <li>
-            <Link to="/">Home</Link>
+          {/* <li> */}
+            {/* <Link to="/">Home</Link>
           </li>
           <li>
             <Link to="/about">About</Link>
           </li>
           <li>
             <Link to="/topics">Topics</Link>
-          </li>
+          </li> */}
           <li>
             <Link to="/schedule">Schedule</Link>
           </li>
@@ -36,7 +36,7 @@ export default function App() {
             <Topics />
           </Route>
           <Route path="/schedule/:classParam">
-            <Schedule/>
+            <TimetableComponent/>
           </Route>
           <Route path="/">
             <Home />
