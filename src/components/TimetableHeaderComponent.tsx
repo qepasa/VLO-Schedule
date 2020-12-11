@@ -14,13 +14,15 @@ const TimetableHeaderComponent: FunctionComponent<TimetableHeaderOwnProps> = () 
     ];
     return <>
         <div>Dzień</div>
-        {startOfLessonArray.map(startOfLesson => {
-            const hm = startOfLesson.split(':');
-            return new Date().setHours(parseInt(hm[0]), parseInt(hm[1]));
-        }).map((startOfLesson, idx) => <Box>
-            <div>{idx.toString()}</div>
-            <div>{format(startOfLesson, "k:mm")+"-"+format(addMinutes(startOfLesson, 45), "k:mm")}</div>
-        </Box>)}
+        <div style={{display: 'grid', gridTemplateColumns: 'repeat(11, calc(80vw/11))'}}>
+            {startOfLessonArray.map(startOfLesson => {
+                const hm = startOfLesson.split(':');
+                return new Date().setHours(parseInt(hm[0]), parseInt(hm[1]));
+            }).map((startOfLesson, idx) => <Box>
+                <div>{idx.toString()}</div>
+                <div>{format(startOfLesson, "k:mm") + "-" + format(addMinutes(startOfLesson, 45), "k:mm")}</div>
+            </Box>)}
+        </div>
     </>;
 };
 

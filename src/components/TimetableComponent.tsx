@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme) => ({
     timetableWrapper: {
         display: 'grid',
         gridAutoFlow: 'rows',
-        gridTemplateColumns: 'repeat(12, 10em)',
-        gridTemplateRows: 'repeat(6, auto)',
+        gridTemplateColumns: '10vw 80vw',
+        gridTemplateRows: 'repeat(6, 15vh)',
     },
 }));
 
