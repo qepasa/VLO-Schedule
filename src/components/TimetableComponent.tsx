@@ -1,7 +1,7 @@
-import { Box, makeStyles } from "@material-ui/core";
+import { Box, Container, makeStyles } from "@material-ui/core";
 import { eachDayOfInterval } from "date-fns";
 import { endOfWeek, startOfWeek } from "date-fns/esm";
-import { FunctionComponent, useEffect } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps, useParams } from "react-router-dom";
 import { RootState } from "typesafe-actions";
@@ -28,8 +28,10 @@ const useStyles = makeStyles((theme) => ({
     timetableWrapper: {
         display: 'grid',
         gridAutoFlow: 'rows',
-        gridTemplateColumns: 'repeat(12, 10em)',
-        gridTemplateRows: 'repeat(6, auto)',
+        gridTemplateColumns: '7vw 90vw',
+        gridTemplateRows: '5vh repeat(5, 15vh)',
+        rowGap: '1px',
+        marginTop: theme.spacing(2),
     },
 }));
 
@@ -46,12 +48,12 @@ const TimetableComponent: FunctionComponent<ScheduleProps> = ({ schedule, loadSc
     });
 
     return <Box className={classes.timetableWrapper}>
-        <TimetableHeaderComponent />
-        {Array.from(Array(5).keys()).map(dayIdx => <DayTimetableComponent dayTimetable={schedule[dayIdx]} dayIdx={dayIdx} currentWeekInterval={days}/>)}
-        {/* Class param: {classParam} */}
-        {/* Schedule: */}
-        {/* {JSON.stringify(schedule)} */}
-    </Box>
+            <TimetableHeaderComponent />
+            {Array.from(Array(5).keys()).map(dayIdx => <DayTimetableComponent dayTimetable={schedule[dayIdx]} dayIdx={dayIdx} currentWeekInterval={days} />)}
+            {/* Class param: {classParam} */}
+            {/* Schedule: */}
+            {/* {JSON.stringify(schedule)} */}
+        </Box>;
 }
 
 

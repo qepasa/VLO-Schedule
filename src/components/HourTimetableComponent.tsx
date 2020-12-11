@@ -14,8 +14,8 @@ const HourTimetableComponent: FunctionComponent<HourTimetableProps> = ({ slotIdx
     // console.log(dayTimetable);
     // console.log("idx: " + slotIdx);
     // console.log(hour[0]);
-    return <div style={{height: '150px', maxHeight: '150px', display: 'grid', gridTemplateColumns: 'auto', gridTemplateRows: `repeat(${hourTimetable.length}, calc(150px/${hourTimetable.length}))` }}>
-        {hourTimetable.map(lesson => <LessonComponent lesson={lesson} parentSize={hourTimetable.length}/>)}
+    return <div style={{ height: '150px', maxHeight: '150px', display: 'grid', gridTemplateColumns: 'auto', gridTemplateRows: `repeat(${hourTimetable.length}, calc(150px/${hourTimetable.length}))` }}>
+        {/* {hourTimetable.map(lesson => <LessonComponent lesson={lesson} />)} */}
     </div>;
 };
 
