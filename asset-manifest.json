@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/VLO-Schedule/static/css/main.6dea0f05.chunk.css",
-    "main.js": "/VLO-Schedule/static/js/main.43f73920.chunk.js",
-    "main.js.map": "/VLO-Schedule/static/js/main.43f73920.chunk.js.map",
+    "main.js": "/VLO-Schedule/static/js/main.d2a18e75.chunk.js",
+    "main.js.map": "/VLO-Schedule/static/js/main.d2a18e75.chunk.js.map",
     "runtime-main.js": "/VLO-Schedule/static/js/runtime-main.2606bc74.js",
     "runtime-main.js.map": "/VLO-Schedule/static/js/runtime-main.2606bc74.js.map",
-    "static/js/2.aeb5449a.chunk.js": "/VLO-Schedule/static/js/2.aeb5449a.chunk.js",
-    "static/js/2.aeb5449a.chunk.js.map": "/VLO-Schedule/static/js/2.aeb5449a.chunk.js.map",
+    "static/js/2.d1e3546e.chunk.js": "/VLO-Schedule/static/js/2.d1e3546e.chunk.js",
+    "static/js/2.d1e3546e.chunk.js.map": "/VLO-Schedule/static/js/2.d1e3546e.chunk.js.map",
     "static/js/3.9f402690.chunk.js": "/VLO-Schedule/static/js/3.9f402690.chunk.js",
     "static/js/3.9f402690.chunk.js.map": "/VLO-Schedule/static/js/3.9f402690.chunk.js.map",
     "index.html": "/VLO-Schedule/index.html",
     "static/css/main.6dea0f05.chunk.css.map": "/VLO-Schedule/static/css/main.6dea0f05.chunk.css.map",
-    "static/js/2.aeb5449a.chunk.js.LICENSE.txt": "/VLO-Schedule/static/js/2.aeb5449a.chunk.js.LICENSE.txt"
+    "static/js/2.d1e3546e.chunk.js.LICENSE.txt": "/VLO-Schedule/static/js/2.d1e3546e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.2606bc74.js",
-    "static/js/2.aeb5449a.chunk.js",
+    "static/js/2.d1e3546e.chunk.js",
     "static/css/main.6dea0f05.chunk.css",
-    "static/js/main.43f73920.chunk.js"
+    "static/js/main.d2a18e75.chunk.js"
   ]
 }
