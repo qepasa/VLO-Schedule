@@ -1,3 +1,4 @@
+import { Container } from "@material-ui/core";
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -7,42 +8,46 @@ import {
   useRouteMatch,
   useParams
 } from "react-router-dom";
+import PageHeaderComponent from "./components/PageHeaderComponent";
 import TimetableComponent from "./components/TimetableComponent";
+
+
 
 export default function App() {
   return (
     <Router>
-      <div>
+      {/* <div>
         <ul>
-          {/* <li> */}
-            {/* <Link to="/">Home</Link>
+          <li>
+          <Link to="/">Home</Link>
           </li>
           <li>
             <Link to="/about">About</Link>
           </li>
           <li>
             <Link to="/topics">Topics</Link>
-          </li> */}
+          </li>
           <li>
             <Link to="/schedule">Schedule</Link>
           </li>
-        </ul>
+        </ul> */}
 
-        <Switch>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/topics">
-            <Topics />
-          </Route>
-          <Route path="/schedule/:classParam">
-            <TimetableComponent/>
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </div>
+      <Switch>
+        <Route path="/about">
+          <About />
+        </Route>
+        <Route path="/topics">
+          <Topics />
+        </Route>
+        <Route path="/schedule/:classParam">
+          <PageHeaderComponent />
+          <TimetableComponent />
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+      </Switch>
+      {/* </div> */}
     </Router>
   );
 }

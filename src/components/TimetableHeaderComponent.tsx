@@ -13,8 +13,8 @@ const TimetableHeaderComponent: FunctionComponent<TimetableHeaderOwnProps> = () 
         '7:10', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '14:50', '15:40', '16:30',
     ];
     return <>
-        <div>Dzień</div>
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(11, calc(80vw/11))'}}>
+        <div></div>
+        <div style={{display: 'grid', gridTemplateColumns: 'repeat(11, calc(90vw/11))'}}>
             {startOfLessonArray.map(startOfLesson => {
                 const hm = startOfLesson.split(':');
                 return new Date().setHours(parseInt(hm[0]), parseInt(hm[1]));

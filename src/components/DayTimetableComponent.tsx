@@ -112,7 +112,7 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
                     gridColumn: `${(lesson.lesson.time_index+1).toString()} / ${(lesson.lesson.time_index + lesson.lesson.duration + 1).toString()}`,
 
                 }}>
-                    <LessonComponent lesson={lesson.lesson} height={(15*lesson.positionData.width / gridRows) + 'vh'} />
+                    <LessonComponent lesson={lesson.lesson} height={(15*lesson.positionData.width / gridRows) + 'vh'} lessonsByHour={lessonsByHour}/>
             </div>);
             for(let i = lesson.lesson.time_index; i < lesson.lesson.time_index + lesson.lesson.duration; ++i) {
                 remainingWidth[i] -= lesson.positionData.width;
@@ -125,7 +125,7 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
         <div>
             {format(currentWeekInterval[dayIdx], "EEEE")}
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(11, calc(80vw/11))`, columnGap: '1px', gridTemplateRows: `repeat(${gridRows}, calc(15vh/${gridRows}))` }}>
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(11, calc(90vw/11))`, columnGap: '1px', gridTemplateRows: `repeat(${gridRows}, calc(15vh/${gridRows}))` }}>
             {ToComps.flat()}
         </div>
         {/* {lessonsByHour.map((hour, idx) => <HourTimetableComponent slotIdx={idx} hourTimetable={hour} />)} */}
