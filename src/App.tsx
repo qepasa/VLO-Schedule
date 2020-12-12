@@ -15,7 +15,7 @@ import TimetableComponent from "./components/TimetableComponent";
 
 export default function App() {
   return (
-    <Router>
+    <Router basename={"VLO-Schedule"}>
       {/* <div>
         <ul>
           <li>
@@ -54,7 +54,7 @@ export default function App() {
 
 function Home() {
   return <h2>
-    Home
+    Home basename
     <Link to="/schedule/2E">Schedule</Link>
   </h2>;
 }
