@@ -6,7 +6,8 @@ import {
   Route,
   Link,
   useRouteMatch,
-  useParams
+  useParams,
+  HashRouter
 } from "react-router-dom";
 import PageHeaderComponent from "./components/PageHeaderComponent";
 import TimetableComponent from "./components/TimetableComponent";
@@ -15,7 +16,7 @@ import TimetableComponent from "./components/TimetableComponent";
 
 export default function App() {
   return (
-    <Router basename={"VLO-Schedule"}>
+    <HashRouter basename={"/"}>
       {/* <div>
         <ul>
           <li>
@@ -48,7 +49,7 @@ export default function App() {
         </Route>
       </Switch>
       {/* </div> */}
-    </Router>
+    </HashRouter>
   );
 }
 
