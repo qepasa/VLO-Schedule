@@ -53,7 +53,10 @@ export default function App() {
 }
 
 function Home() {
-  return <h2>Home</h2>;
+  return <h2>
+    Home
+    <Link to="/schedule/2E">Schedule</Link>
+  </h2>;
 }
 
 const About = () => {
