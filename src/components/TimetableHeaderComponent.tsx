@@ -14,7 +14,7 @@ const TimetableHeaderComponent: FunctionComponent<TimetableHeaderOwnProps> = () 
     ];
     return <>
         <div></div>
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(11, calc(90vw/11))'}}>
+        <div style={{display: 'grid', gridTemplateColumns: 'repeat(11, calc(90vw/11))', columnGap: '1px'}}>
             {startOfLessonArray.map(startOfLesson => {
                 const hm = startOfLesson.split(':');
                 return new Date().setHours(parseInt(hm[0]), parseInt(hm[1]));
