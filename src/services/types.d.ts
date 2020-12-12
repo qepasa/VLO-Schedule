@@ -21,6 +21,7 @@ declare module 'ApiModel' {
         subject: string,
         teacher: string,
         time_index: number,
+        group: string,
     };
 };
 

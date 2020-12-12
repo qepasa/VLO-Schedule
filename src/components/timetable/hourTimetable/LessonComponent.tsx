@@ -44,7 +44,7 @@ const LessonComponent: FunctionComponent<LessonComponentProps> = ({ lesson, heig
     }
 
     return <div style={{ fontSize, height: height, overflow: 'hidden' }} ref={ref} onClick={handleClick}>
-        <div style={{ textAlign: 'left' }}>{lesson.subject}</div>
+        <div style={{ textAlign: 'left' }}>{lesson.subject} {lesson.group}</div>
         <div style={{ textAlign: 'center' }}>{lesson.teacher}</div>
         <div style={{ textAlign: 'right' }}>{lesson.classroom}</div>
         <HourDialogComponent lessons={dialogData} lessonNumber={lessonNumber} onClose={handleClose} open={open} />

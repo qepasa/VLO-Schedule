@@ -10,7 +10,7 @@ import {
   HashRouter
 } from "react-router-dom";
 import PageHeaderComponent from "./components/PageHeaderComponent";
-import TimetableComponent from "./components/TimetableComponent";
+import TimetableComponent from "./components/timetable/TimetableComponent";
 
 
 

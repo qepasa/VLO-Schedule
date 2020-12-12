@@ -11,11 +11,17 @@ const theme = createMuiTheme({
   overrides: {
     MuiCssBaseline: {
       '@global': {
+        body: {
+          '-webkit-text-size-adjust': 'none',
+          'text-size-adjust': 'none',
+          '-moz-text-size-adjust': 'none',
+          '-ms-text-size-adjuist': 'none',
+        },
         '*': {
           '--scrollbarBG': '#CFD8DC',
           '--thumbBG': '#90A4AE',
           scrollbarWidth: 'thin',
-          scrollbarColor: 'var(--thumbBG) var(--scrollbarBG)'
+          scrollbarColor: 'var(--thumbBG) var(--scrollbarBG)',
         },
         '*::-webkit-scrollbar': {
           width: '11px',

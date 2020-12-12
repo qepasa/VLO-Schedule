@@ -28,7 +28,7 @@ const HourDialogComponent: FunctionComponent<LessonComponentProps> = ({ lessons,
                     {lessons.map(lesson => (<>
                         <ListItem key={lesson.subject + lesson.teacher + lesson.color}>
                             <ListItemText
-                                primary={`Nazwa lekcji: ${lesson.subject}`}
+                                primary={`${lesson.subject}${lesson.group ? " - " + lesson.group : ""}`}
                                 secondary={<>
                                     <div>Nauczyciel: {lesson.teacher}</div>
                                     <div>Sala: {lesson.classroom}</div>

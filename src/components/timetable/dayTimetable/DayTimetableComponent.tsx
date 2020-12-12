@@ -1,8 +1,10 @@
 import React, { FunctionComponent } from "react";
 import { DaySchedule, Lesson } from 'ApiModel';
 import { format } from "date-fns";
-import { lcm } from "../utils/math-utils";
-import LessonComponent from "./LessonComponent";
+import { lcm } from "../../../utils/math-utils";
+import LessonComponent from "../hourTimetable/LessonComponent";
+import { pl } from "date-fns/locale";
+import useFitText from "use-fit-text";
 
 function getLessonsByHour(dayTimetable: DaySchedule) {
     const lessonsByHour = [...Array(11)].map(() => Array<Lesson>());
@@ -88,6 +90,7 @@ function getProcessedHourSlots(dayTimetable: DaySchedule, lessonsByHour: Lesson[
 }
 
 const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimetable, dayIdx, currentWeekInterval }) => {
+    const { fontSize, ref } = useFitText();
     if (!dayTimetable) {
         return <div></div>;
     }
@@ -99,7 +102,7 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
     const gridRows = processedHourSlots.length > 0 ? processedHourSlots[0].totalWidth : 1;
     console.log(processedHourSlots);
 
-    const remainingWidth = Array(11).fill(gridRows+1);
+    const remainingWidth = Array(11).fill(gridRows + 1);
     const ToComps = processedHourSlots.map(hourSlot => {
         const result = [];
         for (const lesson of hourSlot.lessons) {
@@ -109,12 +112,12 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
                 {
                     backgroundColor: `${lesson.lesson.color}`,
                     gridRow: `${(bottomRow - lesson.positionData.width).toString()} / ${bottomRow.toString()}`,
-                    gridColumn: `${(lesson.lesson.time_index+1).toString()} / ${(lesson.lesson.time_index + lesson.lesson.duration + 1).toString()}`,
+                    gridColumn: `${(lesson.lesson.time_index + 1).toString()} / ${(lesson.lesson.time_index + lesson.lesson.duration + 1).toString()}`,
 
                 }}>
-                    <LessonComponent lesson={lesson.lesson} height={(15*lesson.positionData.width / gridRows) + 'vh'} lessonsByHour={lessonsByHour}/>
+                <LessonComponent lesson={lesson.lesson} height={(15 * lesson.positionData.width / gridRows) + 'vh'} lessonsByHour={lessonsByHour} />
             </div>);
-            for(let i = lesson.lesson.time_index; i < lesson.lesson.time_index + lesson.lesson.duration; ++i) {
+            for (let i = lesson.lesson.time_index; i < lesson.lesson.time_index + lesson.lesson.duration; ++i) {
                 remainingWidth[i] -= lesson.positionData.width;
             }
         }
@@ -122,8 +125,8 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
     })
     // TODO(pawelp): handle empty processedhourslots
     return <>
-        <div>
-            {format(currentWeekInterval[dayIdx], "EEEE")}
+        <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+            {format(currentWeekInterval[dayIdx], "iii", { locale: pl })}
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: `repeat(11, calc(90vw/11))`, columnGap: '1px', gridTemplateRows: `repeat(${gridRows}, calc(15vh/${gridRows}))` }}>
             {ToComps.flat()}

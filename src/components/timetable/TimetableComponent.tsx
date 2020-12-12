@@ -5,9 +5,9 @@ import React, { FunctionComponent, useEffect } from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps, useParams } from "react-router-dom";
 import { RootState } from "typesafe-actions";
-import { loadScheduleAsync } from "../store/schedule/actions";
-import DayTimetableComponent from "./DayTimetableComponent";
-import TimetableHeaderComponent from "./TimetableHeaderComponent";
+import { loadScheduleAsync } from "../../store/schedule/actions";
+import DayTimetableComponent from "./dayTimetable/DayTimetableComponent";
+import TimetableHeaderComponent from "./timetableHeader/TimetableHeaderComponent";
 
 
 const mapStateToProps = (state: RootState) => ({
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         gridTemplateColumns: '7vw 90vw',
         gridTemplateRows: '5vh repeat(5, 15vh)',
         rowGap: '1px',
-        marginTop: theme.spacing(2),
+        margin: theme.spacing(2, 1, 2, 1),
     },
 }));
 
