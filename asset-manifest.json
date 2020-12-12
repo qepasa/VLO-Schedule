@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/VLO-Schedule/static/css/main.6dea0f05.chunk.css",
+    "main.css": "/VLO-Schedule/static/css/main.0d88be01.chunk.css",
     "main.js": "/VLO-Schedule/static/js/main.6f9bf5d3.chunk.js",
     "main.js.map": "/VLO-Schedule/static/js/main.6f9bf5d3.chunk.js.map",
     "runtime-main.js": "/VLO-Schedule/static/js/runtime-main.93806705.js",
@@ -10,13 +10,13 @@
     "static/js/3.58f24deb.chunk.js": "/VLO-Schedule/static/js/3.58f24deb.chunk.js",
     "static/js/3.58f24deb.chunk.js.map": "/VLO-Schedule/static/js/3.58f24deb.chunk.js.map",
     "index.html": "/VLO-Schedule/index.html",
-    "static/css/main.6dea0f05.chunk.css.map": "/VLO-Schedule/static/css/main.6dea0f05.chunk.css.map",
+    "static/css/main.0d88be01.chunk.css.map": "/VLO-Schedule/static/css/main.0d88be01.chunk.css.map",
     "static/js/2.3c48fec1.chunk.js.LICENSE.txt": "/VLO-Schedule/static/js/2.3c48fec1.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.93806705.js",
     "static/js/2.3c48fec1.chunk.js",
-    "static/css/main.6dea0f05.chunk.css",
+    "static/css/main.0d88be01.chunk.css",
     "static/js/main.6f9bf5d3.chunk.js"
   ]
 }
