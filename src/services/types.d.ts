@@ -23,6 +23,11 @@ declare module 'ApiModel' {
         time_index: number,
         group: string,
     };
+
+    export type GetClassesResponse = {
+        success: boolean,
+        resp: string[],
+    };
 };
 
 declare module 'typesafe-actions' {
