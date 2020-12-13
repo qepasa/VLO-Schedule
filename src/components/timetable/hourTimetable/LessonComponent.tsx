@@ -25,15 +25,15 @@ const LessonComponent: FunctionComponent<LessonComponentProps> = ({ lesson, heig
 
     const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         let currentTargetRect = e.currentTarget.getBoundingClientRect();
-        console.log(e);
-        console.log(currentTargetRect);
-        console.log(e.pageX);
+        // console.log(e);
+        // console.log(currentTargetRect);
+        // console.log(e.pageX);
         const clickXPosRelative = e.pageX - currentTargetRect.left;
         const clickPositionFrac = clickXPosRelative / (currentTargetRect.right - currentTargetRect.left);
-        console.log(clickPositionFrac);
+        // console.log(clickPositionFrac);
         const lessonDurationFrac = 1 / lesson.duration;
         const xD = Math.floor(clickPositionFrac / lessonDurationFrac);
-        console.log(xD)
+        // console.log(xD)
 
         if (e.target === ref.current ||
             (e.target instanceof Node && ref.current.contains(e.target))) {

@@ -32,7 +32,7 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
     const matches = useMediaQuery('(min-width:900px)');
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    console.log(availableClasses);
+    // console.log(availableClasses);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);

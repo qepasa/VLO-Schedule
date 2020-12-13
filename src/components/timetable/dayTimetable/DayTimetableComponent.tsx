@@ -48,12 +48,12 @@ type CellPositionData = {
 
 function getProcessedHourSlots(dayTimetable: DaySchedule, lessonsByHour: Lesson[][]): Array<ProcessedHourSlot> {
     const maxCongetsion = Array(11).fill(0);
-    console.log(lessonsByHour);
+    // console.log(lessonsByHour);
     for (let i = 0; i < 11; ++i) {
         maxCongetsion[i] = lessonsByHour[i].length;
     }
 
-    console.log(maxCongetsion);
+    // console.log(maxCongetsion);
 
     const totalWidth = lcm(maxCongetsion.filter(val => val != 0));
 
@@ -118,7 +118,7 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
         };
     }
     let fromBottom: boolean = true;
-    console.log(remainingWidth);
+    // console.log(remainingWidth);
     const ToComps = processedHourSlots.map(hourSlot => {
         const result = [];
         for (const lesson of hourSlot.lessons) {
@@ -132,9 +132,9 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
                 gridRowEnd = cellFreeSpace.top;
                 gridRowStart = cellFreeSpace.top - lesson.width;
             }
-            console.log(`fromBottom: ${fromBottom} lesson:`);
-            console.log(lesson);
-            console.log(`gridRowStart: ${gridRowStart}, gridRowEnd: ${gridRowEnd}`);
+            // console.log(`fromBottom: ${fromBottom} lesson:`);
+            // console.log(lesson);
+            // console.log(`gridRowStart: ${gridRowStart}, gridRowEnd: ${gridRowEnd}`);
 
             result.push(<div style={
                 {
@@ -152,7 +152,7 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
                     remainingWidth[i].top = gridRowStart;
                 }
             }
-            console.log(remainingWidth);
+            // console.log(remainingWidth);
             fromBottom = !fromBottom;
         }
         return result;

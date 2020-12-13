@@ -9,6 +9,7 @@ import {
   useParams,
   HashRouter
 } from "react-router-dom";
+import PageFooterComponent from "./components/PageFooterComponent";
 import PageHeaderComponent from "./components/PageHeaderComponent";
 import TimetableComponent from "./components/timetable/TimetableComponent";
 
@@ -41,8 +42,13 @@ export default function App() {
           <Topics />
         </Route>
         <Route path="/schedule/:classParam">
-          <PageHeaderComponent />
-          <TimetableComponent />
+          <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
+            <div style={{flex: "1 0 auto"}}>
+              <PageHeaderComponent />
+              <TimetableComponent />
+            </div>
+            <PageFooterComponent />
+          </div>
         </Route>
         <Route path="/">
           <Home />
