@@ -5,6 +5,7 @@ import { lcm } from "../../../utils/math-utils";
 import LessonComponent from "../hourTimetable/LessonComponent";
 import { pl } from "date-fns/locale";
 import useFitText from "use-fit-text";
+import { NumberLiteralType } from "typescript";
 
 function getLessonsByHour(dayTimetable: DaySchedule) {
     const lessonsByHour = [...Array(11)].map(() => Array<Lesson>());
@@ -31,15 +32,18 @@ type PositionData = {
     width: number,
 };
 
-type ProcessedLesson = {
-    lesson: Lesson;
-    positionData: PositionData;
-};
+type ProcessedLesson = Lesson & PositionData;
 
 type ProcessedHourSlot = {
     lessons: Array<ProcessedLesson>; // lessons that start at current slot. Sorted by (time_index+duration, subject) descending.
     totalWidth: number;
-    reamainingWidth: number;
+    ceil: number;
+    floor: number;
+}
+
+type CellPositionData = {
+    top: number;
+    bottom: number;
 }
 
 function getProcessedHourSlots(dayTimetable: DaySchedule, lessonsByHour: Lesson[][]): Array<ProcessedHourSlot> {
@@ -54,31 +58,36 @@ function getProcessedHourSlots(dayTimetable: DaySchedule, lessonsByHour: Lesson[
     const totalWidth = lcm(maxCongetsion.filter(val => val != 0));
 
     const processedHourSlot = dayTimetable.map(hourSchedule => {
-        const processedLessons = hourSchedule.map(lesson => { return { lesson } as ProcessedLesson });
+        const processedLessons = hourSchedule.map(lesson => { return lesson as ProcessedLesson });
 
         processedLessons.sort((a, b) => {
-            const aLen = a.lesson.time_index + a.lesson.duration - 1;
-            const bLen = b.lesson.time_index + b.lesson.duration - 1;
+            const aLen = a.time_index + a.duration - 1;
+            const bLen = b.time_index + b.duration - 1;
             if (aLen == bLen) {
-                return a.lesson.subject.localeCompare(b.lesson.subject);
+                return a.subject.localeCompare(b.subject);
             }
             return aLen > bLen ? -1 : 1;
         });
         return {
             lessons: processedLessons,
             totalWidth: totalWidth,
-            reamainingWidth: totalWidth,
+            ceil: totalWidth,
+            floor: 0,
         } as ProcessedHourSlot;
     });
     const remainingWidth = Array(11).fill(totalWidth);
     /// calculate remaining width for each slot individually!!!!
     for (const hourSlot of processedHourSlot) {
         for (const lesson of hourSlot.lessons) {
-            const lessonStart = lesson.lesson.time_index, lessonEnd = lesson.lesson.time_index + lesson.lesson.duration;
+            const lessonStart = lesson.time_index, lessonEnd = lesson.time_index + lesson.duration;
             const lessonMaxCongestion = Math.max(...maxCongetsion.slice(lessonStart, lessonEnd));
-            const width = Math.floor(remainingWidth[lessonStart] / lessonMaxCongestion);
+            let width = totalWidth + 1;
+            for (let i = lessonStart; i < lessonEnd; ++i) {
+                width = Math.min(width, Math.floor(remainingWidth[i] / maxCongetsion[i]));
+            }
+            // const width = Math.floor(Math.max(...remainingWidth.slice(lessonStart, lessonEnd)) / lessonMaxCongestion);
             // console.log(`maxCong: ${lessonMaxCongestion}, remainingW: ${hourSlot.reamainingWidth}`);
-            lesson.positionData = { width };
+            lesson.width = width;
             for (let i = lessonStart; i < lessonEnd; ++i) {
                 maxCongetsion[i]--;
                 remainingWidth[i] -= width;
@@ -100,26 +109,51 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
     const processedHourSlots = getProcessedHourSlots(dayTimetable, lessonsByHour);
 
     const gridRows = processedHourSlots.length > 0 ? processedHourSlots[0].totalWidth : 1;
-    console.log(processedHourSlots);
 
-    const remainingWidth = Array(11).fill(gridRows + 1);
+    const remainingWidth = Array<CellPositionData>(11);
+    for (let i = 0; i < 11; ++i) {
+        remainingWidth[i] = {
+            bottom: 1,
+            top: gridRows + 1,
+        };
+    }
+    let fromBottom: boolean = true;
+    console.log(remainingWidth);
     const ToComps = processedHourSlots.map(hourSlot => {
         const result = [];
         for (const lesson of hourSlot.lessons) {
             // console.log(`Processing: $`)
-            let bottomRow = remainingWidth[lesson.lesson.time_index];
+            let cellFreeSpace = remainingWidth[lesson.time_index];
+            let gridRowStart, gridRowEnd;
+            if (fromBottom) {
+                gridRowStart = cellFreeSpace.bottom;
+                gridRowEnd = cellFreeSpace.bottom + lesson.width;
+            } else {
+                gridRowEnd = cellFreeSpace.top;
+                gridRowStart = cellFreeSpace.top - lesson.width;
+            }
+            console.log(`fromBottom: ${fromBottom} lesson:`);
+            console.log(lesson);
+            console.log(`gridRowStart: ${gridRowStart}, gridRowEnd: ${gridRowEnd}`);
+
             result.push(<div style={
                 {
-                    backgroundColor: `${lesson.lesson.color}`,
-                    gridRow: `${(bottomRow - lesson.positionData.width).toString()} / ${bottomRow.toString()}`,
-                    gridColumn: `${(lesson.lesson.time_index + 1).toString()} / ${(lesson.lesson.time_index + lesson.lesson.duration + 1).toString()}`,
+                    backgroundColor: `${lesson.color}`,
+                    gridRow: `${gridRowStart.toString()} / ${gridRowEnd.toString()}`,
+                    gridColumn: `${(lesson.time_index + 1).toString()} / ${(lesson.time_index + lesson.duration + 1).toString()}`,
 
                 }}>
-                <LessonComponent lesson={lesson.lesson} height={(15 * lesson.positionData.width / gridRows) + 'vh'} lessonsByHour={lessonsByHour} />
+                <LessonComponent lesson={lesson} height={(15 * lesson.width / gridRows) + 'vh'} lessonsByHour={lessonsByHour} />
             </div>);
-            for (let i = lesson.lesson.time_index; i < lesson.lesson.time_index + lesson.lesson.duration; ++i) {
-                remainingWidth[i] -= lesson.positionData.width;
+            for (let i = lesson.time_index; i < lesson.time_index + lesson.duration; i++) {
+                if (fromBottom) {
+                    remainingWidth[i].bottom = gridRowEnd;
+                } else {
+                    remainingWidth[i].top = gridRowStart;
+                }
             }
+            console.log(remainingWidth);
+            fromBottom = !fromBottom;
         }
         return result;
     })
