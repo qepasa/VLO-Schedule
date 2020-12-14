@@ -1,9 +1,11 @@
-import { Box, Button, IconButton, makeStyles, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from "@material-ui/core";
+import { Badge, Box, Button, IconButton, makeStyles, Menu, MenuItem, Toolbar, Tooltip, Typography, useMediaQuery } from "@material-ui/core";
 import React, { FunctionComponent } from "react";
 import { RouteComponentProps, useParams, withRouter } from "react-router-dom";
 import SchoolIcon from '@material-ui/icons/School';
 import { RootState } from "typesafe-actions";
 import { connect } from "react-redux";
+import MailIcon from '@material-ui/icons/Mail';
+import GitHubIcon from '@material-ui/icons/GitHub';
 
 const useStyles = makeStyles((theme) => ({
     toolbar: {
@@ -12,9 +14,21 @@ const useStyles = makeStyles((theme) => ({
     toolbarTitle: {
         margin: theme.spacing(1),
         flex: 1,
+        [theme.breakpoints.down('md')]: {
+            fontSize: '125%',
+        }
     },
-    iconButton: {
-        border: '1px',
+    sectionDesktop: {
+        display: 'none',
+        [theme.breakpoints.up('md')]: {
+            display: 'flex',
+        },
+    },
+    sectionMobile: {
+        display: 'flex',
+        [theme.breakpoints.up('md')]: {
+            display: 'none',
+        },
     },
 }));
 
@@ -51,19 +65,17 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
     const classParam = useParams<HeaderParams>().classParam;
     return <Toolbar className={classes.toolbar}>
         <Box alignSelf="left">
-            {matches ?
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleClick}
-                    endIcon={<SchoolIcon />}>
-                    Wybierz klasę
+            <Button
+                className={classes.sectionDesktop}
+                variant="contained"
+                color="primary"
+                onClick={handleClick}
+                endIcon={<SchoolIcon />}>
+                Wybierz klasę
             </Button>
-                :
-                <IconButton onClick={handleClick} color="primary" className={classes.iconButton}>
-                    <SchoolIcon />
-                </IconButton>
-            }
+            <IconButton onClick={handleClick} color="primary" className={classes.sectionMobile}>
+                <SchoolIcon />
+            </IconButton>
             <Menu
                 id="classes-menu"
                 anchorEl={anchorEl}
@@ -88,6 +100,19 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
         >
             Rozkład klasy {classParam}
         </Typography>
+        <div className={classes.sectionDesktop}>
+            <Tooltip title={"Wyślij do nas maila!"} aria-label={"send-feedback-tooltip"} arrow>
+                <IconButton aria-label="send-feedback" color="inherit" component="a" href="mailto:abababa@babababa.com?cc=babababa@babababa.com&subject=Zg%C5%82o%C5%9B%20B%C5%82%C4%85d" target="_blank">
+                    <MailIcon />
+                </IconButton>
+            </Tooltip>
+
+            <Tooltip title={"Kod. PogU"} aria-label={"github-repo-tooltip"} arrow>
+                <IconButton aria-label="github-repo" color="inherit" component="a" href="https://github.com/qepasa/VLO-Schedule" target="_blank">
+                    <GitHubIcon />
+                </IconButton>
+            </Tooltip>
+        </div>
     </Toolbar >
 };
 

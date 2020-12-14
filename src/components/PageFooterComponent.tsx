@@ -16,7 +16,7 @@ const PageFooterComponent: FunctionComponent = () => {
         <Typography variant="caption" align="center" gutterBottom>
             <div style={{ float: "right" }}>
 
-                <a target="_blank" href="https://github.com/Cloud11665/sabat.dev/tree/master/api">API rozkładu</a> stworzone przez <a target="_blank" href="https://github.com/Cloud11665">Cloud11665</a>
+                <a target="_blank" href="https://github.com/Cloud11665/sabat.dev/tree/master/api">API rozkładu zajęć</a> stworzone przez <a target="_blank" href="https://github.com/Cloud11665">Cloud11665</a>
             </div>
         </Typography>
         {/* </Container> */}
