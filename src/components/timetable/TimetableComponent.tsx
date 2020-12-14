@@ -67,7 +67,7 @@ const TimetableComponent: FunctionComponent<ScheduleProps> = ({ scheduleStatus, 
                         Wystąpił błąd podczas ładowania rozkładu. Odśwież stronę.
                     </Typography>
                 </>
-                : Array.from(Array(5).keys()).map(dayIdx => <DayTimetableComponent dayTimetable={schedule[dayIdx]} dayIdx={dayIdx} currentWeekInterval={days} />)
+                : Array.from(Array(5).keys()).map(dayIdx => <DayTimetableComponent dayTimetable={schedule[dayIdx]} dayIdx={dayIdx} currentWeekInterval={days} key={dayIdx.toString()}/>)
         }
         {/* Class param: {classParam} */}
         {/* Schedule: */}

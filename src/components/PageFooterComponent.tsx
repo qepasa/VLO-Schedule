@@ -9,9 +9,6 @@ const useStyles = makeStyles((theme) => ({
     footerText: {
         paddingRight: theme.spacing(1),
         float: 'right',
-        [theme.breakpoints.down('md')]: {
-            fontSize: '70%',
-        }
     },
 }));
 

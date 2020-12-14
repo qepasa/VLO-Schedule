@@ -48,7 +48,7 @@ const HourDialogComponent: FunctionComponent<LessonComponentProps> = ({ lessons,
                 </List>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="primary">Zamknij</Button>
+                <Button onClick={handleClose} color="secondary">Zamknij</Button>
             </DialogActions>
         </Dialog>
     </>

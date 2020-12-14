@@ -1,4 +1,4 @@
-import { createMuiTheme, CssBaseline, ThemeProvider, useMediaQuery } from "@material-ui/core";
+import { createMuiTheme, CssBaseline, Theme, ThemeProvider, useMediaQuery } from "@material-ui/core";
 import React, { FunctionComponent } from "react";
 import { connect } from "react-redux";
 import {
@@ -25,14 +25,15 @@ type AppProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
 type ThemeType = 'dark' | 'light';
 
 const App: FunctionComponent<AppProps> = ({ preferences, setTheme }) => {
-  const preferredTheme = useMediaQuery('(prefers-color-scheme: dark)') ? 'dark' : 'light';
+  const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  console.log(preferredTheme);
   if (preferences.theme === "") {
     setTheme(preferredTheme);
   }
 
   const computedTheme = preferences.theme === "" ? preferredTheme : preferences.theme;
 
-  const theme = React.useMemo(() => createMuiTheme({
+  const theme: Theme = React.useMemo(() => createMuiTheme({
     palette: {
       type: (computedTheme as ThemeType),
     },
@@ -61,11 +62,17 @@ const App: FunctionComponent<AppProps> = ({ preferences, setTheme }) => {
             backgroundColor: 'var(--thumbBG)',
             bordeRadius: '6px',
             border: '3px solid var(--scrollbarBG)',
-          }
-        }
-      }
+          },
+        },
+      },
     }
   }), [computedTheme]);
+
+  theme.typography.caption = {
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '60%',
+    }
+  }
 
   return (
     <ThemeProvider theme={theme}>
