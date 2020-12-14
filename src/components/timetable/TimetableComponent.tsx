@@ -45,9 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TimetableComponent: FunctionComponent<ScheduleProps> = ({ scheduleStatus, schedule, loadSchedule, loadClasses }) => {
-    console.log("Am I even here?");
     const classParam = useParams<ScheduleParams>().classParam;
-    console.log(classParam);
     useEffect(() => { loadClasses(); }, [loadClasses]);
     useEffect(() => { loadSchedule(classParam); }, [loadSchedule, classParam]);
     const classes = useStyles();
