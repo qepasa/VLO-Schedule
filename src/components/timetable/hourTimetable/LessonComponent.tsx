@@ -1,9 +1,9 @@
-import { Typography } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import { Lesson } from 'ApiModel';
 import React, { FunctionComponent, useState } from 'react';
-import ReactDOM from 'react-dom';
 import useFitText from 'use-fit-text';
 import HourDialogComponent from './HourDialogComponent';
+import { getContrast } from '../../../utils/math-utils';
 
 type LessonComponentOwnProps = {
     lesson: Lesson;
@@ -12,6 +12,17 @@ type LessonComponentOwnProps = {
 };
 
 type LessonComponentProps = LessonComponentOwnProps;
+
+
+const useStyles = makeStyles((theme) => ({
+    lessonTile: {
+        padding: theme.spacing(0.2),
+    },
+    textStyle: {
+        // NOTE(pawelp): fiddle with this if you want to make text colors fancy
+        // filter: 'invert(5%) contrast(200%) grayscale(170%) saturate(0%)'
+    }
+}));
 
 const LessonComponent: FunctionComponent<LessonComponentProps> = ({ lesson, height, lessonsByHour }) => {
     const { fontSize, ref } = useFitText();
@@ -42,11 +53,20 @@ const LessonComponent: FunctionComponent<LessonComponentProps> = ({ lesson, heig
             setOpen(true);
         }
     }
+    const classes = useStyles();
+    const textColor = getContrast(lesson.color);
 
-    return <div style={{ fontSize, height: height, overflow: 'hidden' }} ref={ref} onClick={handleClick}>
-        <div style={{ textAlign: 'left' }}>{lesson.subject} {lesson.group}</div>
-        <div style={{ textAlign: 'center' }}>{lesson.teacher}</div>
-        <div style={{ textAlign: 'right' }}>{lesson.classroom}</div>
+    return <div style={{
+        fontSize, height: height, overflow: 'hidden', display: 'flex', flexDirection: 'column'
+    }} ref={ref} onClick={handleClick} className={classes.lessonTile}>
+        <div style={{
+            textAlign: 'left', flex: "1 0 auto", color: textColor,
+        }} className={classes.textStyle}>{lesson.teacher}</div>
+        <div style={{ textAlign: 'center', flex: "1 0 auto", color: textColor }} className={classes.textStyle}>{lesson.subject}</div>
+        <div style={{ flexShrink: 0, color: textColor }} className={classes.textStyle}>
+            <div style={{ float: 'left', textAlign: 'left' }}>{lesson.classroom}</div>
+            <div style={{ float: 'right', textAlign: 'right' }}>{lesson.group}</div>
+        </div>
         <HourDialogComponent lessons={dialogData} lessonNumber={lessonNumber} onClose={handleClose} open={open} />
     </div>;
 };
