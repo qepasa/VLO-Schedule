@@ -1,18 +1,19 @@
-import { Box, Container, makeStyles } from "@material-ui/core";
+import { Box, makeStyles, Typography } from "@material-ui/core";
 import { eachDayOfInterval } from "date-fns";
 import { endOfWeek, startOfWeek } from "date-fns/esm";
 import React, { FunctionComponent, useEffect } from "react";
 import { connect } from "react-redux";
-import { RouteComponentProps, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { RootState } from "typesafe-actions";
 import { loadClassesAsync } from "../../store/classes/actions";
-import { loadClassesEpic } from "../../store/classes/epics";
 import { loadScheduleAsync } from "../../store/schedule/actions";
 import DayTimetableComponent from "./dayTimetable/DayTimetableComponent";
 import TimetableHeaderComponent from "./timetableHeader/TimetableHeaderComponent";
-
+import Skeleton from '@material-ui/lab/Skeleton';
+import ErrorIcon from '@material-ui/icons/Error';
 
 const mapStateToProps = (state: RootState) => ({
+    scheduleStatus: state.schedule.isLoadingSchedule,
     schedule: state.schedule.schedule,
 });
 
@@ -36,15 +37,21 @@ const useStyles = makeStyles((theme) => ({
         rowGap: '1px',
         margin: theme.spacing(2, 1, 2, 1),
     },
+    skeletonStyle: {
+        transform: 'unset',
+        gridRow: '2 / 7',
+        gridColumn: '1 / 3',
+    },
 }));
 
-const TimetableComponent: FunctionComponent<ScheduleProps> = ({ schedule, loadSchedule, loadClasses }) => {
+const TimetableComponent: FunctionComponent<ScheduleProps> = ({ scheduleStatus, schedule, loadSchedule, loadClasses }) => {
     console.log("Am I even here?");
     const classParam = useParams<ScheduleParams>().classParam;
     console.log(classParam);
     useEffect(() => { loadClasses(); }, [loadClasses]);
     useEffect(() => { loadSchedule(classParam); }, [loadSchedule, classParam]);
     const classes = useStyles();
+
     const today = new Date();
     const days: Date[] = eachDayOfInterval({
         start: startOfWeek(today, { weekStartsOn: 1 }),
@@ -53,7 +60,17 @@ const TimetableComponent: FunctionComponent<ScheduleProps> = ({ schedule, loadSc
 
     return <Box className={classes.timetableWrapper}>
         <TimetableHeaderComponent />
-        {Array.from(Array(5).keys()).map(dayIdx => <DayTimetableComponent dayTimetable={schedule[dayIdx]} dayIdx={dayIdx} currentWeekInterval={days} />)}
+        {scheduleStatus.loading
+            ? <Skeleton className={classes.skeletonStyle} animation="wave"/>
+            : scheduleStatus.error ?
+                <>
+                    <ErrorIcon color="error" />
+                    <Typography variant="h6" color="error">
+                        Wystąpił błąd podczas ładowania rozkładu. Odśwież stronę.
+                    </Typography>
+                </>
+                : Array.from(Array(5).keys()).map(dayIdx => <DayTimetableComponent dayTimetable={schedule[dayIdx]} dayIdx={dayIdx} currentWeekInterval={days} />)
+        }
         {/* Class param: {classParam} */}
         {/* Schedule: */}
         {/* {JSON.stringify(schedule)} */}

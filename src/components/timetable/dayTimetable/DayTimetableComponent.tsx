@@ -4,8 +4,6 @@ import { format } from "date-fns";
 import { lcm } from "../../../utils/math-utils";
 import LessonComponent from "../hourTimetable/LessonComponent";
 import { pl } from "date-fns/locale";
-import useFitText from "use-fit-text";
-import { NumberLiteralType } from "typescript";
 
 function getLessonsByHour(dayTimetable: DaySchedule) {
     const lessonsByHour = [...Array(11)].map(() => Array<Lesson>());
@@ -13,7 +11,6 @@ function getLessonsByHour(dayTimetable: DaySchedule) {
     // console.log(lessonsByHour);
     dayTimetable.flat().map(lesson => {
         for (let i = 0; i < lesson.duration; i++) {
-            // console.log(lesson);
             lessonsByHour[lesson.time_index + i].push(lesson);
         }
     });
@@ -55,7 +52,7 @@ function getProcessedHourSlots(dayTimetable: DaySchedule, lessonsByHour: Lesson[
 
     // console.log(maxCongetsion);
 
-    const totalWidth = lcm(maxCongetsion.filter(val => val != 0));
+    const totalWidth = lcm(maxCongetsion.filter(val => val !== 0));
 
     const processedHourSlot = dayTimetable.map(hourSchedule => {
         const processedLessons = hourSchedule.map(lesson => { return lesson as ProcessedLesson });
@@ -63,7 +60,7 @@ function getProcessedHourSlots(dayTimetable: DaySchedule, lessonsByHour: Lesson[
         processedLessons.sort((a, b) => {
             const aLen = a.time_index + a.duration - 1;
             const bLen = b.time_index + b.duration - 1;
-            if (aLen == bLen) {
+            if (aLen === bLen) {
                 return a.subject.localeCompare(b.subject);
             }
             return aLen > bLen ? -1 : 1;
@@ -80,7 +77,6 @@ function getProcessedHourSlots(dayTimetable: DaySchedule, lessonsByHour: Lesson[
     for (const hourSlot of processedHourSlot) {
         for (const lesson of hourSlot.lessons) {
             const lessonStart = lesson.time_index, lessonEnd = lesson.time_index + lesson.duration;
-            const lessonMaxCongestion = Math.max(...maxCongetsion.slice(lessonStart, lessonEnd));
             let width = totalWidth + 1;
             for (let i = lessonStart; i < lessonEnd; ++i) {
                 width = Math.min(width, Math.floor(remainingWidth[i] / maxCongetsion[i]));
@@ -99,7 +95,6 @@ function getProcessedHourSlots(dayTimetable: DaySchedule, lessonsByHour: Lesson[
 }
 
 const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimetable, dayIdx, currentWeekInterval }) => {
-    const { fontSize, ref } = useFitText();
     if (!dayTimetable) {
         return <div></div>;
     }
@@ -143,7 +138,7 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
                     gridColumn: `${(lesson.time_index + 1).toString()} / ${(lesson.time_index + lesson.duration + 1).toString()}`,
 
                 }}>
-                <LessonComponent lesson={lesson} height={(15 * lesson.width / gridRows) + 'vh'} lessonsByHour={lessonsByHour} />
+                <LessonComponent lesson={lesson} height={(15 * lesson.width / gridRows) + 'vh'} lessonsByHour={lessonsByHour} currentWeekInterval={currentWeekInterval} />
             </div>);
             for (let i = lesson.time_index; i < lesson.time_index + lesson.duration; i++) {
                 if (fromBottom) {

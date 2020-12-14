@@ -1,11 +1,17 @@
-import { Container, makeStyles, Typography } from "@material-ui/core";
+import { Link, makeStyles, Typography } from "@material-ui/core";
 import React, { FunctionComponent } from "react";
 
 const useStyles = makeStyles((theme) => ({
     footer: {
         backgroundColor: theme.palette.background.paper,
-        marginRight: theme.spacing(2),
         flexShrink: 0,
+    },
+    footerText: {
+        paddingRight: theme.spacing(1),
+        float: 'right',
+        [theme.breakpoints.down('md')]: {
+            fontSize: '70%',
+        }
     },
 }));
 
@@ -14,9 +20,12 @@ const PageFooterComponent: FunctionComponent = () => {
     return <footer className={classes.footer}>
         {/* <Container maxWidth="lg"> */}
         <Typography variant="caption" align="center" gutterBottom>
-            <div style={{ float: "right" }}>
-
-                <a target="_blank" href="https://github.com/Cloud11665/sabat.dev/tree/master/api">API rozkładu zajęć</a> stworzone przez <a target="_blank" href="https://github.com/Cloud11665">Cloud11665</a>
+            <div className={classes.footerText}>
+                <Link target="_blank" href="https://github.com/Cloud11665/sabat.dev/tree/master/api" color="secondary">
+                    API rozkładu zajęć </Link>
+                    stworzone przez
+                <Link target="_blank" href="https://github.com/Cloud11665" color="secondary">Cloud11665</Link>, 
+                Frontend przez <Link target="_blank" href="https://github.com/qepasa" color="secondary">qepasa</Link>
             </div>
         </Typography>
         {/* </Container> */}

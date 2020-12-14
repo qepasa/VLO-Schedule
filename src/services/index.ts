@@ -1,7 +1,9 @@
 import * as schedule from './schedule-api';
 
-export default {
+const apis = {
     api: {
         schedule,
     },
 };
+
+export default apis;

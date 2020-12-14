@@ -1,11 +1,12 @@
 {
   "name": "vlo-schedule",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
-  "homepage": "http://qepasa.github.io/VLO-Schedule",
+  "homepage": "https://qepasa.github.io",
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.5.0",
@@ -26,6 +27,7 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-observable": "^1.2.0",
+    "redux-persist": "^6.0.0",
     "rxjs": "^6.6.3",
     "typesafe-actions": "5.1.0-1",
     "typescript": "^4.1.2",

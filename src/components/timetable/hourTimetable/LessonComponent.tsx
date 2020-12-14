@@ -9,6 +9,7 @@ type LessonComponentOwnProps = {
     lesson: Lesson;
     height: string;
     lessonsByHour: Lesson[][];
+    currentWeekInterval: Date[];
 };
 
 type LessonComponentProps = LessonComponentOwnProps;
@@ -24,8 +25,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const LessonComponent: FunctionComponent<LessonComponentProps> = ({ lesson, height, lessonsByHour }) => {
-    const { fontSize, ref } = useFitText();
+const LessonComponent: FunctionComponent<LessonComponentProps> = ({ lesson, height, lessonsByHour, currentWeekInterval }) => {
+    const { fontSize, ref } = useFitText({logLevel: "none"});
     const [open, setOpen] = useState(false);
     const [dialogData, setDialogData] = useState<Lesson[]>([]);
     const [lessonNumber, setLessonNumber] = useState<number>(0);
@@ -67,7 +68,7 @@ const LessonComponent: FunctionComponent<LessonComponentProps> = ({ lesson, heig
             <div style={{ float: 'left', textAlign: 'left' }}>{lesson.classroom}</div>
             <div style={{ float: 'right', textAlign: 'right' }}>{lesson.group}</div>
         </div>
-        <HourDialogComponent lessons={dialogData} lessonNumber={lessonNumber} onClose={handleClose} open={open} />
+        <HourDialogComponent lessons={dialogData} lessonNumber={lessonNumber} dayIndex={lesson.day_index} onClose={handleClose} open={open} currentWeekInterval={currentWeekInterval}/>
     </div>;
 };
 

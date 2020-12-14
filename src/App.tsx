@@ -1,115 +1,93 @@
-import { Container } from "@material-ui/core";
-import React from "react";
+import { createMuiTheme, CssBaseline, ThemeProvider, useMediaQuery } from "@material-ui/core";
+import React, { FunctionComponent } from "react";
+import { connect } from "react-redux";
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  useRouteMatch,
-  useParams,
-  HashRouter
+  HashRouter,
+  Redirect
 } from "react-router-dom";
+import { RootState } from "typesafe-actions";
 import PageFooterComponent from "./components/PageFooterComponent";
 import PageHeaderComponent from "./components/PageHeaderComponent";
 import TimetableComponent from "./components/timetable/TimetableComponent";
+import { setTheme } from "./store/preferences/actions";
 
+const mapStateToProps = (state: RootState) => ({
+  preferences: state.preferences
+});
 
-
-export default function App() {
-  return (
-    <HashRouter basename={"/"}>
-      {/* <div>
-        <ul>
-          <li>
-          <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/topics">Topics</Link>
-          </li>
-          <li>
-            <Link to="/schedule">Schedule</Link>
-          </li>
-        </ul> */}
-
-      <Switch>
-        <Route path="/about">
-          <About />
-        </Route>
-        <Route path="/topics">
-          <Topics />
-        </Route>
-        <Route path="/schedule/:classParam">
-          <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
-            <div style={{flex: "1 0 auto"}}>
-              <PageHeaderComponent />
-              <TimetableComponent />
-            </div>
-            <PageFooterComponent />
-          </div>
-        </Route>
-        <Route path="/">
-          <Home />
-        </Route>
-      </Switch>
-      {/* </div> */}
-    </HashRouter>
-  );
-}
-
-function Home() {
-  return <h2>
-    Home basename
-    <Link to="/schedule/2E">Schedule</Link>
-  </h2>;
-}
-
-const About = () => {
-  return <h2>About</h2>;
-}
-
-function Topics() {
-  let match = useRouteMatch();
-
-  return (
-    <div>
-      <h2>Topics</h2>
-
-      <ul>
-        <li>
-          <Link to={`${match.url}/components`}>Components</Link>
-        </li>
-        <li>
-          <Link to={`${match.url}/props-v-state`}>
-            Props v. State
-          </Link>
-        </li>
-      </ul>
-
-      {/* The Topics page has its own <Switch> with more routes
-          that build on the /topics URL path. You can think of the
-          2nd <Route> here as an "index" page for all topics, or
-          the page that is shown when no topic is selected */}
-      <Switch>
-        <Route path={`${match.path}/:topicId`}>
-          <Topic />
-        </Route>
-        <Route path={match.path}>
-          <h3>Please select a topic.</h3>
-        </Route>
-      </Switch>
-    </div>
-  );
-}
-
-interface TopicParams {
-  topicId: string,
+const dispatchProps = {
+  setTheme: setTheme,
 };
 
-function Topic() {
-  let { topicId } = useParams<TopicParams>();
-  return <h3>Requested topic ID: {topicId}</h3>;
+type AppProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
+type ThemeType = 'dark' | 'light';
+
+const App: FunctionComponent<AppProps> = ({ preferences, setTheme }) => {
+  const preferredTheme = useMediaQuery('(prefers-color-scheme: dark)') ? 'dark' : 'light';
+  if (preferences.theme === "") {
+    setTheme(preferredTheme);
+  }
+
+  const computedTheme = preferences.theme === "" ? preferredTheme : preferences.theme;
+
+  const theme = React.useMemo(() => createMuiTheme({
+    palette: {
+      type: (computedTheme as ThemeType),
+    },
+    overrides: {
+      MuiCssBaseline: {
+        '@global': {
+          body: {
+            '-webkit-text-size-adjust': 'none',
+            'text-size-adjust': 'none',
+            '-moz-text-size-adjust': 'none',
+            '-ms-text-size-adjuist': 'none',
+          },
+          '*': {
+            '--scrollbarBG': '#CFD8DC',
+            '--thumbBG': '#90A4AE',
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'var(--thumbBG) var(--scrollbarBG)',
+          },
+          '*::-webkit-scrollbar': {
+            width: '11px',
+          },
+          '*::-webkit-scrollbar-track': {
+            background: 'var(--scrollbarBG)',
+          },
+          '*::-webkit-scrollbar-thumb': {
+            backgroundColor: 'var(--thumbBG)',
+            bordeRadius: '6px',
+            border: '3px solid var(--scrollbarBG)',
+          }
+        }
+      }
+    }
+  }), [computedTheme]);
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <HashRouter>
+        <Switch>
+          <Route path="/timetable/:classParam">
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+              <div style={{ flex: "1 0 auto" }}>
+                <PageHeaderComponent />
+                <TimetableComponent />
+              </div>
+              <PageFooterComponent />
+            </div>
+          </Route>
+          <Route path="/">
+            <Redirect to="/timetable/1A" />
+          </Route>
+        </Switch>
+      </HashRouter>
+    </ThemeProvider >
+  );
 }
 
+export default connect(mapStateToProps, dispatchProps)(App);

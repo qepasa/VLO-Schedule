@@ -22,7 +22,7 @@ const middlewares = [epicMiddleware];
 const enhancer = composeWithDevTools(applyMiddleware(...middlewares));
 
 // rehydrate state on app start
-const initialState = {};
+// const initialState = {};
 
 // create store
 const store = createStore(rootReducer, enhancer);

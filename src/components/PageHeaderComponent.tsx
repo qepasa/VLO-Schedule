@@ -1,11 +1,52 @@
-import { Badge, Box, Button, IconButton, makeStyles, Menu, MenuItem, Toolbar, Tooltip, Typography, useMediaQuery } from "@material-ui/core";
+import { Box, Button, IconButton, makeStyles, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@material-ui/core";
 import React, { FunctionComponent } from "react";
+import Skeleton from '@material-ui/lab/Skeleton';
 import { RouteComponentProps, useParams, withRouter } from "react-router-dom";
 import SchoolIcon from '@material-ui/icons/School';
 import { RootState } from "typesafe-actions";
 import { connect } from "react-redux";
 import MailIcon from '@material-ui/icons/Mail';
 import GitHubIcon from '@material-ui/icons/GitHub';
+import { setTheme } from "../store/preferences/actions";
+import NightsStayIcon from '@material-ui/icons/NightsStay';
+import WbSunnyIcon from '@material-ui/icons/WbSunny';
+import { ClassesStatus } from "ApiModel";
+import ErrorIcon from '@material-ui/icons/Error';
+import MoreIcon from '@material-ui/icons/MoreVert';
+
+const getThemeIcon = (theme: string, themeClicked: () => void) => {
+    if (theme === 'light') {
+        return <IconButton aria-label="theme-button" color="inherit" onClick={themeClicked}>
+            < NightsStayIcon />
+        </IconButton>;
+    } else {
+        return <IconButton aria-label="theme-button" color="inherit" onClick={themeClicked}>
+            < WbSunnyIcon />
+        </IconButton>;
+    }
+}
+
+const getClassesMenuContent = (
+    availableClasses: string[], classesStatus: ClassesStatus, menuItemClicked: (c: string) => (() => void), classParam: string, skeletonStyle: string,
+) => {
+    if (classesStatus.loading) {
+        return <>
+            <Skeleton width="3vw" className={skeletonStyle} animation="wave"/>
+            <Skeleton width="3vw" className={skeletonStyle} animation="wave"/>
+            <Skeleton width="3vw" className={skeletonStyle} animation="wave"/>
+        </>
+    } else if (classesStatus.error) {
+        return <div>
+            <ErrorIcon color="error" />
+            <Typography variant="caption" color="error">
+                Wystąpił błąd podczas ładowania klas. Odśwież stronę.
+            </Typography>
+        </div>
+    }
+    return <div>
+        {availableClasses.map(cla => <MenuItem key={cla} onClick={menuItemClicked(cla)} selected={cla === classParam}>{cla}</MenuItem>)}
+    </div>;
+}
 
 const useStyles = makeStyles((theme) => ({
     toolbar: {
@@ -30,22 +71,33 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
     },
+    skeletonStyle: {
+        margin: theme.spacing(1),
+    }
 }));
 
 const mapStateToProps = (state: RootState) => ({
     availableClasses: state.classes.classes,
+    classesStatus: state.classes.isLoadingClasses,
+    preferences: state.preferences
 });
 
-type PageHeaderProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
+const dispatchProps = {
+    setTheme: setTheme,
+};
+
+type PageHeaderProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps & RouteComponentProps;
 
 type HeaderParams = {
     classParam: string,
 };
 
-const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClasses, history }) => {
-    const matches = useMediaQuery('(min-width:900px)');
+const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClasses, classesStatus, preferences, setTheme, history }) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
+
     const open = Boolean(anchorEl);
+    const mobileOpen = Boolean(mobileMoreAnchorEl);
     // console.log(availableClasses);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -61,8 +113,56 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
         history.push(`${cla}`);
     });
 
+    const themeClicked = () => {
+        if (preferences.theme === "dark") {
+            setTheme("light")
+        } else {
+            setTheme("dark");
+        }
+    }
+
     const classes = useStyles();
     const classParam = useParams<HeaderParams>().classParam;
+
+    const handleMobileMenuClose = () => {
+        setMobileMoreAnchorEl(null);
+    }
+    const mobileMenuId = 'primary-search-account-menu-mobile';
+    const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setMobileMoreAnchorEl(event.currentTarget);
+    };
+
+    const renderMobileMenu = (
+        <Menu
+            anchorEl={mobileMoreAnchorEl}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            id={mobileMenuId}
+            keepMounted
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            open={mobileOpen}
+            onClose={handleMobileMenuClose}
+        >
+            <MenuItem>
+                {getThemeIcon(preferences.theme, themeClicked)}
+            </MenuItem>
+            <MenuItem>
+                <Tooltip title={"Wyślij do nas maila!"} aria-label={"send-feedback-tooltip"} arrow>
+                    <IconButton aria-label="send-feedback" color="inherit" component="a" href="mailto:feedback.vlorocks@gmail.com?subject=Zg%C5%82o%C5%9B%20B%C5%82%C4%85d" target="_blank">
+                        <MailIcon />
+                    </IconButton>
+                </Tooltip>
+            </MenuItem>
+            <MenuItem>
+                <Tooltip title={"Kod. PogU"} aria-label={"github-repo-tooltip"} arrow>
+                    <IconButton aria-label="github-repo" color="inherit" component="a" href="https://github.com/qepasa/VLO-Schedule" target="_blank">
+                        <GitHubIcon />
+                    </IconButton>
+                </Tooltip>
+            </MenuItem>
+        </Menu>
+    );
+
+
     return <Toolbar className={classes.toolbar}>
         <Box alignSelf="left">
             <Button
@@ -84,10 +184,10 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
                 onClose={handleClose}
                 PaperProps={{
                     style: {
-                        maxHeight: '50vh',
+                        maxHeight: '70vh',
                     }
                 }}>
-                {availableClasses.map(cla => <MenuItem key={cla} onClick={menuItemClicked(cla)} selected={cla === classParam}>{cla}</MenuItem>)}
+                {getClassesMenuContent(availableClasses, classesStatus, menuItemClicked, classParam, classes.skeletonStyle)}
             </Menu>
         </Box>
         <Typography
@@ -101,8 +201,9 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
             Rozkład klasy {classParam}
         </Typography>
         <div className={classes.sectionDesktop}>
+            {getThemeIcon(preferences.theme, themeClicked)}
             <Tooltip title={"Wyślij do nas maila!"} aria-label={"send-feedback-tooltip"} arrow>
-                <IconButton aria-label="send-feedback" color="inherit" component="a" href="mailto:abababa@babababa.com?cc=babababa@babababa.com&subject=Zg%C5%82o%C5%9B%20B%C5%82%C4%85d" target="_blank">
+                <IconButton aria-label="send-feedback" color="inherit" component="a" href="mailto:feedback.vlorocks@gmail.com?subject=Zg%C5%82o%C5%9B%20B%C5%82%C4%85d" target="_blank">
                     <MailIcon />
                 </IconButton>
             </Tooltip>
@@ -113,7 +214,19 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
                 </IconButton>
             </Tooltip>
         </div>
+        <div className={classes.sectionMobile}>
+            <IconButton
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+            >
+                <MoreIcon />
+            </IconButton>
+            {renderMobileMenu}
+        </div>
     </Toolbar >
 };
 
-export default withRouter(connect(mapStateToProps)(PageHeaderComponent));
+export default withRouter(connect(mapStateToProps, dispatchProps)(PageHeaderComponent));

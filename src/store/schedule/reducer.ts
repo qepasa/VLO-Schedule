@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { ScheduleStatus, WeekSchedule } from "ApiModel";
-import { createReducer, RootAction, RootState } from 'typesafe-actions';
+import { createReducer } from 'typesafe-actions';
 import { loadScheduleAsync } from "./actions";
 
 export const isLoadingSchedule = createReducer({ loading: true, error: false } as ScheduleStatus)
