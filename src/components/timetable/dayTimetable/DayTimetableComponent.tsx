@@ -130,6 +130,7 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
             // console.log(`fromBottom: ${fromBottom} lesson:`);
             // console.log(lesson);
             // console.log(`gridRowStart: ${gridRowStart}, gridRowEnd: ${gridRowEnd}`);
+            const key = lesson.day_index.toString()+lesson.time_index.toString()+lesson.classroom.toString()+lesson.subject+lesson.teacher+lesson.group;
 
             result.push(<div style={
                 {
@@ -137,7 +138,7 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
                     gridRow: `${gridRowStart.toString()} / ${gridRowEnd.toString()}`,
                     gridColumn: `${(lesson.time_index + 1).toString()} / ${(lesson.time_index + lesson.duration + 1).toString()}`,
 
-                }}>
+                }} key={key}>
                 <LessonComponent lesson={lesson} height={(15 * lesson.width / gridRows) + 'vh'} lessonsByHour={lessonsByHour} currentWeekInterval={currentWeekInterval} />
             </div>);
             for (let i = lesson.time_index; i < lesson.time_index + lesson.duration; i++) {
