@@ -20,9 +20,8 @@ const PageFooterComponent: FunctionComponent = () => {
             <div className={classes.footerText}>
                 <Link target="_blank" href="https://github.com/Cloud11665/sabat.dev/tree/master/api" color="secondary">
                     API rozkładu zajęć </Link>
-                    stworzone przez
-                <Link target="_blank" href="https://github.com/Cloud11665" color="secondary">Cloud11665</Link>, 
-                Frontend przez <Link target="_blank" href="https://github.com/qepasa" color="secondary">qepasa</Link>
+                    stworzone przez <Link target="_blank" href="https://github.com/Cloud11665" color="secondary">Cloud11665</Link>, 
+                frontend przez <Link target="_blank" href="https://github.com/qepasa" color="secondary">qepasa</Link>
             </div>
         </Typography>
         {/* </Container> */}
