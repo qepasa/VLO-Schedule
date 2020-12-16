@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Lesson } from 'ApiModel';
-import { Button, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText } from "@material-ui/core";
+import { Button, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@material-ui/core";
 import { pl } from "date-fns/locale";
 import { format } from "date-fns";
 import { capitalizeFirstLetter } from "../../../utils/string-uitls";
@@ -14,11 +14,10 @@ type HourDialogComponentOwnProps = {
     currentWeekInterval: Date[];
 };
 
-type LessonComponentProps = HourDialogComponentOwnProps;
+type HourDialogComponentProps = HourDialogComponentOwnProps;
 
-
-const HourDialogComponent: FunctionComponent<LessonComponentProps> = ({ lessons, lessonNumber, dayIndex, onClose, open, currentWeekInterval }) => {
-    if(!lessons) {
+const HourDialogComponent: FunctionComponent<HourDialogComponentProps> = ({ lessons, lessonNumber, dayIndex, onClose, open, currentWeekInterval }) => {
+    if (!lessons) {
         return <div></div>;
     }
     const handleClose = () => {
@@ -32,19 +31,23 @@ const HourDialogComponent: FunctionComponent<LessonComponentProps> = ({ lessons,
             </DialogTitle>
             <DialogContent>
                 <List>
-                    {lessons.map(lesson => (<>
-                        <ListItem key={lesson.subject + lesson.teacher + lesson.color}>
-                            <ListItemText
-                                primary={`${lesson.subject}${lesson.group ? " - " + lesson.group : ""}`}
-                                secondary={<>
-                                    <div>Nauczyciel: {lesson.teacher}</div>
-                                    <div>Sala: {lesson.classroom}</div>
-                                </>}
-                            />
-                        </ListItem>
-                        <Divider variant="inset" component="li" />
-                    </>
-                    ))}
+                    {lessons.map(lesson => {
+                        const key = lesson.subject + lesson.teacher + lesson.color + lesson.group;
+                        return (<>
+                            <ListItem key={key}>
+                                <ListItemText
+                                    primary={`${lesson.subject}${lesson.group ? " - " + lesson.group : ""}`}
+                                    secondary={<>
+                                        <Typography component="a" variant="body2" key={key+"Teacher"}>Nauczyciel: {lesson.teacher}</Typography>
+                                        <br />
+                                        <Typography component="a" variant="body2" key={key+"Classroom"}>Sala: {lesson.classroom}</Typography>
+                                    </>}
+                                    key={key+"ListItemText"}
+                                />
+                            </ListItem>
+                            <Divider variant="middle" component="li" key={key+"Divider"} />
+                        </>)
+                    })}
                 </List>
             </DialogContent>
             <DialogActions>

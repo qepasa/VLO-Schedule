@@ -15,16 +15,14 @@ const useStyles = makeStyles((theme) => ({
 const PageFooterComponent: FunctionComponent = () => {
     const classes = useStyles();
     return <footer className={classes.footer}>
-        {/* <Container maxWidth="lg"> */}
         <Typography variant="caption" align="center" gutterBottom>
             <div className={classes.footerText}>
                 <Link target="_blank" href="https://github.com/Cloud11665/sabat.dev/tree/master/api" color="secondary">
                     API rozkładu zajęć </Link>
-                    stworzone przez <Link target="_blank" href="https://github.com/Cloud11665" color="secondary">Cloud11665</Link>, 
+                    stworzone przez <Link target="_blank" href="https://github.com/Cloud11665" color="secondary">Cloud11665</Link>,
                 frontend przez <Link target="_blank" href="https://github.com/qepasa" color="secondary">qepasa</Link>
             </div>
         </Typography>
-        {/* </Container> */}
     </footer>;
 };
 

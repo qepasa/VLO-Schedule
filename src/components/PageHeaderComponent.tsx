@@ -1,5 +1,5 @@
 import { Box, Button, IconButton, makeStyles, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@material-ui/core";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState } from "react";
 import Skeleton from '@material-ui/lab/Skeleton';
 import { RouteComponentProps, useParams, withRouter } from "react-router-dom";
 import SchoolIcon from '@material-ui/icons/School';
@@ -31,9 +31,9 @@ const getClassesMenuContent = (
 ) => {
     if (classesStatus.loading) {
         return <>
-            <Skeleton width="3vw" className={skeletonStyle} animation="wave"/>
-            <Skeleton width="3vw" className={skeletonStyle} animation="wave"/>
-            <Skeleton width="3vw" className={skeletonStyle} animation="wave"/>
+            <Skeleton width="3vw" className={skeletonStyle} animation="wave" />
+            <Skeleton width="3vw" className={skeletonStyle} animation="wave" />
+            <Skeleton width="3vw" className={skeletonStyle} animation="wave" />
         </>
     } else if (classesStatus.error) {
         return <div>
@@ -93,23 +93,24 @@ type HeaderParams = {
 };
 
 const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClasses, classesStatus, preferences, setTheme, history }) => {
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
+    const cssStyleClasses = useStyles();
+    const classParam = useParams<HeaderParams>().classParam;
+    const [selectClassAnchorEl, setSelectClassAnchorEl] = useState<null | HTMLElement>(null);
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
 
-    const open = Boolean(anchorEl);
+    const selectClassOpen = Boolean(selectClassAnchorEl);
     const mobileOpen = Boolean(mobileMoreAnchorEl);
-    // console.log(availableClasses);
 
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
+    const handleSelectClassClick = (event: React.MouseEvent<HTMLElement>) => {
+        setSelectClassAnchorEl(event.currentTarget);
     };
 
-    const handleClose = () => {
-        setAnchorEl(null);
+    const handleSelectClassClose = () => {
+        setSelectClassAnchorEl(null);
     };
 
-    const menuItemClicked = (cla: string) => (() => {
-        handleClose();
+    const selectClassMenuItemClicked = (cla: string) => (() => {
+        handleSelectClassClose();
         history.push(`${cla}`);
     });
 
@@ -121,9 +122,6 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
         }
     }
 
-    const classes = useStyles();
-    const classParam = useParams<HeaderParams>().classParam;
-
     const handleMobileMenuClose = () => {
         setMobileMoreAnchorEl(null);
     }
@@ -131,6 +129,20 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
+
+    const themeIcon = getThemeIcon(preferences.theme, themeClicked);
+    const feedbackIcon = (
+        <Tooltip title={"Wyślij do nas maila!"} aria-label={"send-feedback-tooltip"} arrow>
+            <IconButton aria-label="send-feedback" color="inherit" component="a" href="mailto:feedback.vlorocks@gmail.com?subject=Zg%C5%82o%C5%9B%20B%C5%82%C4%85d" target="_blank">
+                <MailIcon />
+            </IconButton>
+        </Tooltip>);
+    const githubIcon = (
+        <Tooltip title={"Kod na Githubie"} aria-label={"github-repo-tooltip"} arrow>
+            <IconButton aria-label="github-repo" color="inherit" component="a" href="https://github.com/qepasa/VLO-Schedule" target="_blank">
+                <GitHubIcon />
+            </IconButton>
+        </Tooltip>);
 
     const renderMobileMenu = (
         <Menu
@@ -143,51 +155,43 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
             onClose={handleMobileMenuClose}
         >
             <MenuItem>
-                {getThemeIcon(preferences.theme, themeClicked)}
+                {themeIcon}
             </MenuItem>
             <MenuItem>
-                <Tooltip title={"Wyślij do nas maila!"} aria-label={"send-feedback-tooltip"} arrow>
-                    <IconButton aria-label="send-feedback" color="inherit" component="a" href="mailto:feedback.vlorocks@gmail.com?subject=Zg%C5%82o%C5%9B%20B%C5%82%C4%85d" target="_blank">
-                        <MailIcon />
-                    </IconButton>
-                </Tooltip>
+                {feedbackIcon}
             </MenuItem>
             <MenuItem>
-                <Tooltip title={"Kod. PogU"} aria-label={"github-repo-tooltip"} arrow>
-                    <IconButton aria-label="github-repo" color="inherit" component="a" href="https://github.com/qepasa/VLO-Schedule" target="_blank">
-                        <GitHubIcon />
-                    </IconButton>
-                </Tooltip>
+                {githubIcon}
             </MenuItem>
         </Menu>
     );
 
 
-    return <Toolbar className={classes.toolbar}>
+    return <Toolbar className={cssStyleClasses.toolbar}>
         <Box alignSelf="left">
             <Button
-                className={classes.sectionDesktop}
+                className={cssStyleClasses.sectionDesktop}
                 variant="contained"
                 color="primary"
-                onClick={handleClick}
+                onClick={handleSelectClassClick}
                 endIcon={<SchoolIcon />}>
                 Wybierz klasę
             </Button>
-            <IconButton onClick={handleClick} color="primary" className={classes.sectionMobile}>
+            <IconButton onClick={handleSelectClassClick} color="primary" className={cssStyleClasses.sectionMobile}>
                 <SchoolIcon />
             </IconButton>
             <Menu
                 id="classes-menu"
-                anchorEl={anchorEl}
+                anchorEl={selectClassAnchorEl}
                 keepMounted
-                open={open}
-                onClose={handleClose}
+                open={selectClassOpen}
+                onClose={handleSelectClassClose}
                 PaperProps={{
                     style: {
                         maxHeight: '70vh',
                     }
                 }}>
-                {getClassesMenuContent(availableClasses, classesStatus, menuItemClicked, classParam, classes.skeletonStyle)}
+                {getClassesMenuContent(availableClasses, classesStatus, selectClassMenuItemClicked, classParam, cssStyleClasses.skeletonStyle)}
             </Menu>
         </Box>
         <Typography
@@ -196,25 +200,16 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
             color="inherit"
             align="center"
             noWrap
-            className={classes.toolbarTitle}
+            className={cssStyleClasses.toolbarTitle}
         >
             Rozkład klasy {classParam}
         </Typography>
-        <div className={classes.sectionDesktop}>
-            {getThemeIcon(preferences.theme, themeClicked)}
-            <Tooltip title={"Wyślij do nas maila!"} aria-label={"send-feedback-tooltip"} arrow>
-                <IconButton aria-label="send-feedback" color="inherit" component="a" href="mailto:feedback.vlorocks@gmail.com?subject=Zg%C5%82o%C5%9B%20B%C5%82%C4%85d" target="_blank">
-                    <MailIcon />
-                </IconButton>
-            </Tooltip>
-
-            <Tooltip title={"Kod. PogU"} aria-label={"github-repo-tooltip"} arrow>
-                <IconButton aria-label="github-repo" color="inherit" component="a" href="https://github.com/qepasa/VLO-Schedule" target="_blank">
-                    <GitHubIcon />
-                </IconButton>
-            </Tooltip>
+        <div className={cssStyleClasses.sectionDesktop}>
+            {themeIcon}
+            {feedbackIcon}
+            {githubIcon}
         </div>
-        <div className={classes.sectionMobile}>
+        <div className={cssStyleClasses.sectionMobile}>
             <IconButton
                 aria-label="show more"
                 aria-controls={mobileMenuId}
