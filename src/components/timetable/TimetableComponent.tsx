@@ -12,22 +12,6 @@ import TimetableHeaderComponent from "./timetableHeader/TimetableHeaderComponent
 import Skeleton from '@material-ui/lab/Skeleton';
 import ErrorIcon from '@material-ui/icons/Error';
 
-const mapStateToProps = (state: RootState) => ({
-    scheduleStatus: state.schedule.isLoadingSchedule,
-    schedule: state.schedule.schedule,
-});
-
-const dispatchProps = {
-    loadSchedule: loadScheduleAsync.request,
-    loadClasses: loadClassesAsync.request,
-}
-
-type ScheduleParams = {
-    classParam: string,
-}
-
-type ScheduleProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
-
 const useStyles = makeStyles((theme) => ({
     timetableWrapper: {
         display: 'grid',
@@ -38,40 +22,52 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(2, 1, 2, 1),
     },
     skeletonStyle: {
-        transform: 'unset',
-        gridRow: '2 / 7',
+        transform: 'scale(1, 0.95)',
         gridColumn: '1 / 3',
     },
 }));
 
-const TimetableComponent: FunctionComponent<ScheduleProps> = ({ scheduleStatus, schedule, loadSchedule, loadClasses }) => {
+const mapStateToProps = (state: RootState) => ({
+    timetableStatus: state.schedule.isLoadingSchedule,
+    timetable: state.schedule.schedule,
+});
+
+const dispatchProps = {
+    loadTimetable: loadScheduleAsync.request,
+    loadClasses: loadClassesAsync.request,
+}
+
+type ScheduleParams = {
+    classParam: string,
+}
+
+type ScheduleProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
+
+const TimetableComponent: FunctionComponent<ScheduleProps> = ({ timetableStatus, timetable, loadTimetable, loadClasses }) => {
+    const cssStyleClasses = useStyles();
     const classParam = useParams<ScheduleParams>().classParam;
     useEffect(() => { loadClasses(); }, [loadClasses]);
-    useEffect(() => { loadSchedule(classParam); }, [loadSchedule, classParam]);
-    const classes = useStyles();
+    useEffect(() => { loadTimetable(classParam); }, [loadTimetable, classParam]);
 
     const today = new Date();
-    const days: Date[] = eachDayOfInterval({
+    const daysInCurrentWeek: Date[] = eachDayOfInterval({
         start: startOfWeek(today, { weekStartsOn: 1 }),
         end: endOfWeek(today, { weekStartsOn: 1 }),
     });
 
-    return <Box className={classes.timetableWrapper}>
+    return <Box className={cssStyleClasses.timetableWrapper}>
         <TimetableHeaderComponent />
-        {scheduleStatus.loading
-            ? <Skeleton className={classes.skeletonStyle} animation="wave"/>
-            : scheduleStatus.error ?
+        {timetableStatus.loading
+            ? Array.from(Array(5).keys()).map((idx) => <Skeleton className={cssStyleClasses.skeletonStyle} animation="wave" key={"skeleton" + idx.toString()} />)
+            : timetableStatus.error ?
                 <>
                     <ErrorIcon color="error" />
                     <Typography variant="h6" color="error">
                         Wystąpił błąd podczas ładowania rozkładu. Odśwież stronę.
                     </Typography>
                 </>
-                : Array.from(Array(5).keys()).map(dayIdx => <DayTimetableComponent dayTimetable={schedule[dayIdx]} dayIdx={dayIdx} currentWeekInterval={days} key={dayIdx.toString()}/>)
+                : Array.from(Array(5).keys()).map(dayIdx => <DayTimetableComponent dayTimetable={timetable[dayIdx]} dayIdx={dayIdx} currentWeekInterval={daysInCurrentWeek} key={dayIdx.toString()} />)
         }
-        {/* Class param: {classParam} */}
-        {/* Schedule: */}
-        {/* {JSON.stringify(schedule)} */}
     </Box>;
 }
 

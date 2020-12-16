@@ -5,26 +5,6 @@ import { lcm } from "../../../utils/math-utils";
 import LessonComponent from "../hourTimetable/LessonComponent";
 import { pl } from "date-fns/locale";
 
-function getLessonsByHour(dayTimetable: DaySchedule) {
-    const lessonsByHour = [...Array(11)].map(() => Array<Lesson>());
-
-    // console.log(lessonsByHour);
-    dayTimetable.flat().map(lesson => {
-        for (let i = 0; i < lesson.duration; i++) {
-            lessonsByHour[lesson.time_index + i].push(lesson);
-        }
-    });
-    return lessonsByHour;
-}
-
-type DayTimetableOwnProps = {
-    dayTimetable: DaySchedule;
-    dayIdx: number;
-    currentWeekInterval: Date[];
-};
-
-type DayTimetableProps = DayTimetableOwnProps;
-
 type PositionData = {
     width: number,
 };
@@ -43,14 +23,23 @@ type CellPositionData = {
     bottom: number;
 }
 
+function getLessonsByHour(dayTimetable: DaySchedule) {
+    const lessonsByHour = [...Array(11)].map(() => Array<Lesson>());
+
+    dayTimetable.flat().map(lesson => {
+        for (let i = 0; i < lesson.duration; i++) {
+            lessonsByHour[lesson.time_index + i].push(lesson);
+        }
+    });
+    return lessonsByHour;
+}
+
+
 function getProcessedHourSlots(dayTimetable: DaySchedule, lessonsByHour: Lesson[][]): Array<ProcessedHourSlot> {
     const maxCongetsion = Array(11).fill(0);
-    // console.log(lessonsByHour);
     for (let i = 0; i < 11; ++i) {
         maxCongetsion[i] = lessonsByHour[i].length;
     }
-
-    // console.log(maxCongetsion);
 
     const totalWidth = lcm(maxCongetsion.filter(val => val !== 0));
 
@@ -81,8 +70,6 @@ function getProcessedHourSlots(dayTimetable: DaySchedule, lessonsByHour: Lesson[
             for (let i = lessonStart; i < lessonEnd; ++i) {
                 width = Math.min(width, Math.floor(remainingWidth[i] / maxCongetsion[i]));
             }
-            // const width = Math.floor(Math.max(...remainingWidth.slice(lessonStart, lessonEnd)) / lessonMaxCongestion);
-            // console.log(`maxCong: ${lessonMaxCongestion}, remainingW: ${hourSlot.reamainingWidth}`);
             lesson.width = width;
             for (let i = lessonStart; i < lessonEnd; ++i) {
                 maxCongetsion[i]--;
@@ -94,13 +81,25 @@ function getProcessedHourSlots(dayTimetable: DaySchedule, lessonsByHour: Lesson[
     return processedHourSlot;
 }
 
+type DayTimetableOwnProps = {
+    dayTimetable: DaySchedule;
+    dayIdx: number;
+    currentWeekInterval: Date[];
+};
+
+type DayTimetableProps = DayTimetableOwnProps;
+
 const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimetable, dayIdx, currentWeekInterval }) => {
-    if (!dayTimetable) {
-        return <div></div>;
+    if (!dayTimetable || dayTimetable.length === 0) {
+        return <>
+            <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                {format(currentWeekInterval[dayIdx], "iii", { locale: pl })}
+            </div>
+            <div></div>
+        </>;
     }
-    // console.log(dayTimetable.flat());
+
     const lessonsByHour = getLessonsByHour(dayTimetable);
-    // console.log(lessonsByHour);
     const processedHourSlots = getProcessedHourSlots(dayTimetable, lessonsByHour);
 
     const gridRows = processedHourSlots.length > 0 ? processedHourSlots[0].totalWidth : 1;
@@ -113,11 +112,11 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
         };
     }
     let fromBottom: boolean = true;
-    // console.log(remainingWidth);
-    const ToComps = processedHourSlots.map(hourSlot => {
+
+    const lessonTiles = processedHourSlots.map(hourSlot => {
         const result = [];
         for (const lesson of hourSlot.lessons) {
-            // console.log(`Processing: $`)
+
             let cellFreeSpace = remainingWidth[lesson.time_index];
             let gridRowStart, gridRowEnd;
             if (fromBottom) {
@@ -127,10 +126,8 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
                 gridRowEnd = cellFreeSpace.top;
                 gridRowStart = cellFreeSpace.top - lesson.width;
             }
-            // console.log(`fromBottom: ${fromBottom} lesson:`);
-            // console.log(lesson);
-            // console.log(`gridRowStart: ${gridRowStart}, gridRowEnd: ${gridRowEnd}`);
-            const key = lesson.day_index.toString()+lesson.time_index.toString()+lesson.classroom.toString()+lesson.subject+lesson.teacher+lesson.group;
+
+            const key = lesson.day_index.toString() + lesson.time_index.toString() + lesson.classroom.toString() + lesson.subject + lesson.teacher + lesson.group;
 
             result.push(<div style={
                 {
@@ -148,20 +145,18 @@ const DayTimetableComponent: FunctionComponent<DayTimetableProps> = ({ dayTimeta
                     remainingWidth[i].top = gridRowStart;
                 }
             }
-            // console.log(remainingWidth);
+
             fromBottom = !fromBottom;
         }
         return result;
     })
-    // TODO(pawelp): handle empty processedhourslots
     return <>
         <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
             {format(currentWeekInterval[dayIdx], "iii", { locale: pl })}
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: `repeat(11, calc(90vw/11))`, columnGap: '1px', gridTemplateRows: `repeat(${gridRows}, calc(15vh/${gridRows}))` }}>
-            {ToComps.flat()}
+            {lessonTiles.flat()}
         </div>
-        {/* {lessonsByHour.map((hour, idx) => <HourTimetableComponent slotIdx={idx} hourTimetable={hour} />)} */}
     </>;
 };
 

@@ -1,4 +1,4 @@
-import { createMuiTheme, CssBaseline, Theme, ThemeProvider, useMediaQuery } from "@material-ui/core";
+import { createMuiTheme, CssBaseline, Theme, ThemeProvider } from "@material-ui/core";
 import React, { FunctionComponent } from "react";
 import { connect } from "react-redux";
 import {
