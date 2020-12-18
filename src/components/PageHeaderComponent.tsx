@@ -13,6 +13,8 @@ import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import { ClassesStatus } from "ApiModel";
 import ErrorIcon from '@material-ui/icons/Error';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import SettingsIcon from '@material-ui/icons/Settings';
+import SettingsDialogComponent from "./settings/SettingsDialogComponent";
 
 const getThemeIcon = (theme: string, themeClicked: () => void) => {
     if (theme === 'light') {
@@ -97,6 +99,7 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
     const classParam = useParams<HeaderParams>().classParam;
     const [selectClassAnchorEl, setSelectClassAnchorEl] = useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
+    const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
     const selectClassOpen = Boolean(selectClassAnchorEl);
     const mobileOpen = Boolean(mobileMoreAnchorEl);
@@ -130,6 +133,14 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const handleSettingsOpen = () => {
+        setSettingsOpen(true);
+    };
+
+    const handleSettingsClose = () => {
+        setSettingsOpen(false);
+    };
+
     const themeIcon = getThemeIcon(preferences.theme, themeClicked);
     const feedbackIcon = (
         <Tooltip title={"Wyślij do nas maila!"} aria-label={"send-feedback-tooltip"} arrow>
@@ -143,6 +154,14 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
                 <GitHubIcon />
             </IconButton>
         </Tooltip>);
+    const settingsIcon = (
+        <>
+            <IconButton aria-label="settings-button" color="inherit">
+                <SettingsIcon onClick={handleSettingsOpen} />
+            </IconButton>
+            <SettingsDialogComponent open={settingsOpen} onClose={handleSettingsClose} />
+        </>
+    );
 
     const renderMobileMenu = (
         <Menu
@@ -156,6 +175,9 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
         >
             <MenuItem>
                 {themeIcon}
+            </MenuItem>
+            <MenuItem>
+                {settingsIcon}
             </MenuItem>
             <MenuItem>
                 {feedbackIcon}
@@ -206,6 +228,7 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
         </Typography>
         <div className={cssStyleClasses.sectionDesktop}>
             {themeIcon}
+            {settingsIcon}
             {feedbackIcon}
             {githubIcon}
         </div>
