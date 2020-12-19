@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             width: '100%',
-            minWidth: '30vw',
+            // minWidth: '30vw',
             backgroundColor: theme.palette.background.paper,
             // minHeight: '10vh',
             // maxHeight: '70vh',

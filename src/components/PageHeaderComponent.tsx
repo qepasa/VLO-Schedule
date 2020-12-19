@@ -156,8 +156,8 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
         </Tooltip>);
     const settingsIcon = (
         <>
-            <IconButton aria-label="settings-button" color="inherit">
-                <SettingsIcon onClick={handleSettingsOpen} />
+            <IconButton aria-label="settings-button" color="inherit" onClick={handleSettingsOpen}>
+                <SettingsIcon />
             </IconButton>
             <SettingsDialogComponent open={settingsOpen} onClose={handleSettingsClose} />
         </>
