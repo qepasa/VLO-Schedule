@@ -5,11 +5,7 @@ declare module 'ApiModel' {
         error: boolean,
     };
 
-    export type GroupFilterDict = {
-        [key: string]: Set<string>;
-    };
-
     export type GroupFilter = {
-        [key: string]: string[];
+        [key: string]: Lesson[];
     };
 }

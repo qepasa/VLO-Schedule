@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
-import { GroupFilterDict, GroupFilter, ScheduleStatus, WeekSchedule } from "ApiModel";
+import { GroupFilter, ScheduleStatus, WeekSchedule } from "ApiModel";
 import { createReducer } from 'typesafe-actions';
-import { loadScheduleAsync } from "./actions";
+import { createGroupsAction, loadScheduleAsync } from "./actions";
 
 export const isLoadingSchedule = createReducer({ loading: true, error: false } as ScheduleStatus)
     .handleAction(loadScheduleAsync.request, () => ({ loading: true, error: false } as ScheduleStatus))
@@ -13,25 +13,10 @@ export const isLoadingSchedule = createReducer({ loading: true, error: false } a
 export const schedule = createReducer([] as WeekSchedule)
     .handleAction(loadScheduleAsync.success, (state, action) => action.payload.resp ? action.payload.resp : []);
 
+// TODO(pawelp): do this using selectors instead. Preferably memoized one like reselect. 
 export const groups = createReducer({} as GroupFilter)
-    .handleAction(loadScheduleAsync.success, (state, action) => {
-        const newFilters = {} as GroupFilterDict;
-        action.payload.resp.flat().flat().forEach(cl => {
-            if (!newFilters[cl.subject]) {
-                newFilters[cl.subject] = new Set();
-            }
-            if (cl.group !== "") {
-                newFilters[cl.subject].add(cl.group);
-            }
-        });
-        const newFiltersState = {} as GroupFilter;
-        Object.keys(newFilters).forEach(element => {
-            if (newFilters[element].size > 0) {
-                newFiltersState[element] = Array.from(newFilters[element].keys());
-            }
-        });
-        console.log(newFiltersState);
-        return { ...newFiltersState };
+    .handleAction(createGroupsAction, (state, action) => {
+        return { ...action.payload };
     });
 
 const scheduleReducer = combineReducers({

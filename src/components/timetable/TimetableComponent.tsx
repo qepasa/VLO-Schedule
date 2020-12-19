@@ -13,6 +13,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import ErrorIcon from '@material-ui/icons/Error';
 import { setClass } from "../../store/preferences/actions";
 import { pl } from "date-fns/locale";
+import { filteredTimetable, getTimetableSize } from "../../store/root-selectors";
 
 const useStyles = makeStyles((theme) => ({
     timetableWrapper: {
@@ -32,6 +33,8 @@ const useStyles = makeStyles((theme) => ({
 const mapStateToProps = (state: RootState) => ({
     timetableStatus: state.schedule.isLoadingSchedule,
     timetable: state.schedule.schedule,
+    timetableSize: getTimetableSize(state),
+    filteredTimetable: filteredTimetable(state),
 });
 
 const dispatchProps = {
@@ -46,7 +49,7 @@ type ScheduleParams = {
 
 type ScheduleProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
 
-const TimetableComponent: FunctionComponent<ScheduleProps> = ({ timetableStatus, timetable, loadTimetable, loadClasses, setClass }) => {
+const TimetableComponent: FunctionComponent<ScheduleProps> = ({ timetableStatus, timetable, timetableSize, filteredTimetable, loadTimetable, loadClasses, setClass }) => {
     const cssStyleClasses = useStyles();
     const classParam = useParams<ScheduleParams>().classParam;
     // NOTE(pawelp): not sure if this guarantees that class will be set
@@ -78,7 +81,7 @@ const TimetableComponent: FunctionComponent<ScheduleProps> = ({ timetableStatus,
                         Wystąpił błąd podczas ładowania rozkładu. Odśwież stronę.
                     </Typography>
                 </>
-                : Array.from(Array(5).keys()).map(dayIdx => <DayTimetableComponent dayTimetable={timetable[dayIdx]} dayIdx={dayIdx} currentWeekInterval={daysInCurrentWeek} key={dayIdx.toString()} />)
+                : Array.from(Array(5).keys()).map(dayIdx => <DayTimetableComponent dayTimetable={filteredTimetable[dayIdx]} dayIdx={dayIdx} currentWeekInterval={daysInCurrentWeek} key={dayIdx.toString()} />)
         }
     </Box>;
 }

@@ -1,7 +1,10 @@
-import { createStyles, List, ListItem, ListItemText, ListSubheader, makeStyles, Theme } from "@material-ui/core";
+import { Button, Checkbox, createStyles, List, ListItem, ListItemIcon, ListItemText, ListSubheader, makeStyles, Theme } from "@material-ui/core";
 import React, { FunctionComponent } from "react";
 import { RootState } from "typesafe-actions";
 import { connect } from "react-redux";
+import { Lesson } from "ApiModel";
+import { addGroup, removeGroup } from "../../store/preferences/actions";
+import { getFiltersForCurrentClass } from "../../store/root-selectors";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -23,28 +26,58 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const mapStateToProps = (state: RootState) => ({
     groups: state.schedule.groups,
+    selectedGroups: getFiltersForCurrentClass(state),
+    currentClass: state.preferences.class,
 });
 
-type GroupFiltersProps = ReturnType<typeof mapStateToProps>;
+const dispatchProps = {
+    addGroup: addGroup,
+    removeGroup: removeGroup,
+};
 
-const GroupFiltersComponent: FunctionComponent<GroupFiltersProps> = ({ groups }) => {
+type GroupFiltersProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
+
+const GroupFiltersComponent: FunctionComponent<GroupFiltersProps> = ({ groups, selectedGroups, currentClass, addGroup, removeGroup }) => {
     const cssClasses = useStyles();
-    console.log(groups);
-    console.log(Object.keys(groups));
-    return <List subheader={<li />} className={cssClasses.root}>
-        {Object.keys(groups).map(lessonName =>
-            <li key={`section-${lessonName}`} className={cssClasses.listSection}>
-                <ul className={cssClasses.ul}>
-                    <ListSubheader>{lessonName}</ListSubheader>
-                    {groups[lessonName].map(groupForLesson =>
-                        <ListItem key={`item-${lessonName}-${groupForLesson}`}>
-                            <ListItemText primary={groupForLesson} />
-                        </ListItem>
-                    )}
-                </ul>
-            </li>
-        )}
-    </List>;
+    // console.log(groups);
+    // console.log(Object.keys(groups));
+    // console.log(selectedGroups);
+
+    const handleToggle = (lessonName: string, lesson: Lesson) => () => {
+        // console.log(lessonName);
+        const isActive = selectedGroups[lessonName].find(val => val.group === lesson.group) !== undefined;
+
+        if (isActive) {
+            removeGroup(lesson, currentClass);
+        } else {
+            addGroup(lesson, currentClass);
+        }
+    }
+
+    return <>
+        <List subheader={<li />} className={cssClasses.root}>
+            {Object.keys(groups).map(lessonName =>
+                <li key={`section-${lessonName}`} className={cssClasses.listSection}>
+                    <ul className={cssClasses.ul}>
+                        <ListSubheader>{lessonName}</ListSubheader>
+                        {groups[lessonName].map(lesson =>
+                            <ListItem key={`item-${lessonName}-${lesson.group}`} dense button onClick={handleToggle(lessonName, lesson)}>
+                                <ListItemIcon>
+                                    <Checkbox
+                                        edge="start"
+                                        checked={selectedGroups[lessonName].find(val => val.group === lesson.group) !== undefined}
+                                        tabIndex={-1}
+                                        disableRipple
+                                    />
+                                </ListItemIcon>
+                                <ListItemText primary={lesson.group} secondary={`Nauczyciel: ${lesson.teacher}`} />
+                            </ListItem>
+                        )}
+                    </ul>
+                </li>
+            )}
+        </List>
+    </>;
 }
 
-export default connect(mapStateToProps)(GroupFiltersComponent);
+export default connect(mapStateToProps, dispatchProps)(GroupFiltersComponent);
