@@ -12,8 +12,9 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '100%',
             minWidth: '30vw',
             backgroundColor: theme.palette.background.paper,
-            minHeight: '30vg',
-            maxHeight: '70vh',
+            // minHeight: '10vh',
+            // maxHeight: '70vh',
+            height: 'inherit',
             overflow: 'auto',
         },
         listSection: {

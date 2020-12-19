@@ -1,32 +1,15 @@
-import { Box, Button, Dialog, DialogActions, DialogTitle, Tab, Tabs, Typography } from "@material-ui/core";
+import { Box, Button, createStyles, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles, Tab, Tabs, Theme, Typography } from "@material-ui/core";
+import { TabContext, TabList, TabPanel } from "@material-ui/lab";
 import React, { FunctionComponent, useState } from "react";
 import GroupFiltersComponent from "./GroupFiltersComponent";
 
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: any;
-    value: any;
-}
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-};
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            minHeight: '50vh',
+            maxHeight: '90vh',
+        },
+    }));
 
 type SettingsDialogOwnProps = {
     open: boolean;
@@ -36,32 +19,33 @@ type SettingsDialogOwnProps = {
 type SettingsDialogProps = SettingsDialogOwnProps;
 
 const SettingsDialogComponent: FunctionComponent<SettingsDialogProps> = ({ open, onClose }) => {
-    const [value, setValue] = useState(0);
+    const cssClasses = useStyles();
+    const [value, setValue] = useState('1');
 
-    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
         setValue(newValue);
     };
 
-    return <div>
-        <Dialog open={open} onClose={onClose} aria-labelledby="settings-dialog">
+    return <Dialog open={open} onClose={onClose} aria-labelledby="settings-dialog" className={cssClasses.root}>
             <DialogTitle id="settings-dialog-title">Ustawienia</DialogTitle>
-            <Tabs
-                value={value}
-                indicatorColor="secondary"
-                textColor="secondary"
-                onChange={handleChange}
-            >
-                <Tab label="Filtry grup" textColor="secondary"></Tab>
-            </Tabs>
-            <TabPanel value={value} index={0}>
-                <GroupFiltersComponent />
-            </TabPanel>
+            <TabContext value={value} >
+                <TabList
+                    indicatorColor="secondary"
+                    textColor="secondary"
+                    onChange={handleChange}
+                >
+                    <Tab label="Filtry grup" textColor="secondary" value="1"></Tab>
+                </TabList>
+                <DialogContent>
+                    <TabPanel value="1" >
+                        <GroupFiltersComponent />
+                    </TabPanel>
+                </DialogContent>
+            </TabContext>
             <DialogActions>
                 <Button onClick={onClose} color="secondary">Zamknij</Button>
             </DialogActions>
-        </Dialog>
-
-    </div>;
+        </Dialog>;
 };
 
 export default SettingsDialogComponent;

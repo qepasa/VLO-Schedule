@@ -18,8 +18,9 @@ export const classReducer = createReducer('')
 
 export const groupFiltersReducer = createReducer({} as GroupFiltersByClass)
     .handleAction(createGroupsAction, (state, action) => {
+        /// TODO(pawelp): this should be more clever. In particular, we'll miss groups in new show up and have groups left
+        // behind if some groups get removed.
         const newState = state;
-        // console.log('hello' + newState[action.meta]);
         if (!newState[action.meta]) {
             newState[action.meta] = action.payload;
         }
@@ -45,7 +46,6 @@ export const groupFiltersReducer = createReducer({} as GroupFiltersByClass)
         const newGroupsForCurrentClass = newState[action.meta];
         delete newState[action.meta];
 
-        // console.log(newState);
         return {
             ...newState,
             [action.meta]: {
