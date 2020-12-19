@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, memo } from "react";
 import { Lesson } from 'ApiModel';
 import { Button, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@material-ui/core";
 import { pl } from "date-fns/locale";
@@ -16,7 +16,7 @@ type HourDialogComponentOwnProps = {
 
 type HourDialogComponentProps = HourDialogComponentOwnProps;
 
-const HourDialogComponent: FunctionComponent<HourDialogComponentProps> = ({ lessons, lessonNumber, dayIndex, onClose, open, currentWeekInterval }) => {
+const HourDialogComponent: FunctionComponent<HourDialogComponentProps> = memo(({ lessons, lessonNumber, dayIndex, onClose, open, currentWeekInterval }) => {
     if (!lessons) {
         return <div></div>;
     }
@@ -55,6 +55,6 @@ const HourDialogComponent: FunctionComponent<HourDialogComponentProps> = ({ less
             </DialogActions>
         </Dialog>
     </>
-};
+});
 
 export default HourDialogComponent;

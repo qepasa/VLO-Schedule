@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '100%',
             minWidth: '30vw',
             backgroundColor: theme.palette.background.paper,
+            minHeight: '30vg',
             maxHeight: '70vh',
             overflow: 'auto',
         },
@@ -39,12 +40,8 @@ type GroupFiltersProps = ReturnType<typeof mapStateToProps> & typeof dispatchPro
 
 const GroupFiltersComponent: FunctionComponent<GroupFiltersProps> = ({ groups, selectedGroups, currentClass, addGroup, removeGroup }) => {
     const cssClasses = useStyles();
-    // console.log(groups);
-    // console.log(Object.keys(groups));
-    // console.log(selectedGroups);
 
     const handleToggle = (lessonName: string, lesson: Lesson) => () => {
-        // console.log(lessonName);
         const isActive = selectedGroups[lessonName].find(val => val.group === lesson.group) !== undefined;
 
         if (isActive) {

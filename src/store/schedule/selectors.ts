@@ -17,6 +17,7 @@ export const filteredTimetable = (state: ScheduleState, groupFilters: GroupFilte
         for (let hourIdx = 0; hourIdx < filteredTimetable[dayIdx].length; ++hourIdx) {
             const xd = filteredTimetable[dayIdx][hourIdx].filter(lesson =>
                 (groupFilters[lesson.subject] === undefined) ||
+                (lesson.group === "") ||
                 (groupFilters[lesson.subject] !== undefined && groupFilters[lesson.subject].find(v => v.group === lesson.group) !== undefined)
             );
             filteredTimetable[dayIdx][hourIdx] = xd;

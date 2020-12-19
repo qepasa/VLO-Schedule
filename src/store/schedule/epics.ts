@@ -2,7 +2,7 @@ import { loadScheduleAsync, createGroupsAction } from './actions';
 import { Epic } from 'redux-observable';
 import { RootAction, RootState, Services, isActionOf } from 'typesafe-actions';
 import { from, of } from 'rxjs';
-import { filter, switchMap, catchError, mergeMap } from 'rxjs/operators';
+import { filter, switchMap, catchError, mergeMap, concatMap } from 'rxjs/operators';
 import { GetScheduleResponse, GroupFilter } from 'ApiModel';
 
 export const loadScheduleEpic: Epic<
@@ -14,7 +14,7 @@ export const loadScheduleEpic: Epic<
     filter(isActionOf(loadScheduleAsync.request)),
     switchMap((action) =>
         from(api.schedule.getSchedule(action.payload)).pipe(
-            mergeMap((response) => from([loadScheduleAsync.success(response), createGroupsAction(transformTimetableResponse(response), state$.value.preferences.class)])),
+            concatMap((response) => from([createGroupsAction(transformTimetableResponse(response), state$.value.preferences.class), loadScheduleAsync.success(response)])),
             catchError((message: string) => of(loadScheduleAsync.failure(message)))
         )
     )
