@@ -1,5 +1,5 @@
-import { Button, Checkbox, createStyles, List, ListItem, ListItemIcon, ListItemText, ListSubheader, makeStyles, Theme } from "@material-ui/core";
-import React, { FunctionComponent } from "react";
+import { Button, Checkbox, createStyles, List, ListItem, ListItemIcon, ListItemText, ListSubheader, makeStyles, Theme, Typography } from "@material-ui/core";
+import React, { FunctionComponent, memo } from "react";
 import { RootState } from "typesafe-actions";
 import { connect } from "react-redux";
 import { Lesson } from "ApiModel";
@@ -39,7 +39,7 @@ const dispatchProps = {
 
 type GroupFiltersProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
 
-const GroupFiltersComponent: FunctionComponent<GroupFiltersProps> = ({ groups, selectedGroups, currentClass, addGroup, removeGroup }) => {
+const GroupFiltersComponent: FunctionComponent<GroupFiltersProps> = memo(({ groups, selectedGroups, currentClass, addGroup, removeGroup }) => {
     const cssClasses = useStyles();
 
     const handleToggle = (lessonName: string, lesson: Lesson) => () => {
@@ -53,6 +53,12 @@ const GroupFiltersComponent: FunctionComponent<GroupFiltersProps> = ({ groups, s
     }
 
     return <>
+        <Typography color="error" variant="h6">
+            Uwaga! Ta funkcjonalność jest eksperymentalna. 
+        </Typography>
+        <Typography>
+            Upewnij się, że plan lekcji po zastosowaniu filtrów wygląda tak jak się spodziewasz.
+        </Typography>
         <List subheader={<li />} className={cssClasses.root}>
             {Object.keys(groups).map(lessonName =>
                 <li key={`section-${lessonName}`} className={cssClasses.listSection}>
@@ -76,6 +82,6 @@ const GroupFiltersComponent: FunctionComponent<GroupFiltersProps> = ({ groups, s
             )}
         </List>
     </>;
-}
+});
 
 export default connect(mapStateToProps, dispatchProps)(GroupFiltersComponent);
