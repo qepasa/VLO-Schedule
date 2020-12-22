@@ -1,8 +1,9 @@
-import { loadScheduleAsync } from './actions';
+import { loadScheduleAsync, createGroupsAction } from './actions';
 import { Epic } from 'redux-observable';
 import { RootAction, RootState, Services, isActionOf } from 'typesafe-actions';
 import { from, of } from 'rxjs';
-import { filter, switchMap, map, catchError } from 'rxjs/operators';
+import { filter, switchMap, catchError, mergeMap, concatMap } from 'rxjs/operators';
+import { GetScheduleResponse, GroupFilter } from 'ApiModel';
 
 export const loadScheduleEpic: Epic<
     RootAction,
@@ -13,9 +14,29 @@ export const loadScheduleEpic: Epic<
     filter(isActionOf(loadScheduleAsync.request)),
     switchMap((action) =>
         from(api.schedule.getSchedule(action.payload)).pipe(
-            map(loadScheduleAsync.success),
-            catchError((message: string) => of(loadScheduleAsync.failure(message))
-            )
+            concatMap((response) => from([createGroupsAction(transformTimetableResponse(response), state$.value.preferences.class), loadScheduleAsync.success(response)])),
+            catchError((message: string) => of(loadScheduleAsync.failure(message)))
         )
     )
 );
+
+
+function transformTimetableResponse(response: GetScheduleResponse): GroupFilter {
+    console.time('transformTimetableResponse');
+    const newFilters = {} as GroupFilter;
+    // TODO: (pawelp) remodel handling of error so that we map `success = false` to error at service level
+    if (!response.success) return newFilters;
+
+    response.resp.flat().flat().forEach(cl => {
+        if (!newFilters[cl.subject] && cl.group !== "") {
+            newFilters[cl.subject] = [];
+        }
+        if (cl.group !== "" && !newFilters[cl.subject].find(lesson => lesson.group === cl.group)) {
+            newFilters[cl.subject].push(cl);
+        }
+    });
+    // Object.values(newFilters).forEach(arr => arr.sort((a, b) => a.group.localeCompare(b.group)));
+    console.timeEnd('transformTimetableResponse');
+    return newFilters;
+}
+

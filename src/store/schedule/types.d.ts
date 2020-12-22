@@ -4,4 +4,8 @@ declare module 'ApiModel' {
         loading: boolean,
         error: boolean,
     };
+
+    export type GroupFilter = {
+        [key: string]: Lesson[];
+    };
 }

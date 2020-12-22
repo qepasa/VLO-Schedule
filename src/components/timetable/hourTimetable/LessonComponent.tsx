@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const LessonComponent: FunctionComponent<LessonComponentProps> = ({ lesson, height, lessonsByHour, currentWeekInterval }) => {
+const LessonComponent: FunctionComponent<LessonComponentProps> = memo(({ lesson, height, lessonsByHour, currentWeekInterval }) => {
     const cssStyleClasses = useStyles();
     const { fontSize, ref } = useFitText({logLevel: "none", minFontSize: 5});
     const [open, setOpen] = useState(false);
@@ -65,6 +65,6 @@ const LessonComponent: FunctionComponent<LessonComponentProps> = ({ lesson, heig
         </div>
         <HourDialogComponent lessons={dialogData} lessonNumber={lessonNumber} dayIndex={lesson.day_index} onClose={handleClose} open={open} currentWeekInterval={currentWeekInterval}/>
     </div>;
-};
+});
 
 export default LessonComponent;
