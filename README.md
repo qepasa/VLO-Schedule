@@ -1,7 +1,3 @@
-todo:
-[ ] fix layout for 2Gg
-[ ] add handling of 'groups' data received from endpoint (and maybe some client side filtering?)
-
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
