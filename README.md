@@ -1,7 +1,7 @@
 <div align="center">
   <h1>VLO-Schedule</h1>
   <p>&nbsp;</p>
-    <img src="https://raw.githubusercontent.com/Cloud11665/VLO-Schedule/main/img.png" width=1000 />
+    <img src="https://raw.githubusercontent.com/qepasa/VLO-Schedule/main/img.png" width=1000 />
 </div>
 
 ## Available Scripts
