@@ -8,3 +8,4 @@ export const setClass = createAction('SET_CLASS')<string>();
 export const addGroup = createAction('ADD_GROUP')<Lesson, string>();
 
 export const removeGroup = createAction('REMOVE_GROUP')<Lesson, string>();
+

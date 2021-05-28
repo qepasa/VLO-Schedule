@@ -15,6 +15,8 @@ import ErrorIcon from '@material-ui/icons/Error';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SettingsDialogComponent from "./settings/SettingsDialogComponent";
+import { addWeeks, endOfWeek, format, lightFormat, startOfWeek } from "date-fns";
+import { pl } from "date-fns/locale";
 
 const getThemeIcon = (theme: string, themeClicked: () => void) => {
     if (theme === 'light') {
@@ -81,7 +83,8 @@ const useStyles = makeStyles((theme) => ({
 const mapStateToProps = (state: RootState) => ({
     availableClasses: state.classes.classes,
     classesStatus: state.classes.isLoadingClasses,
-    preferences: state.preferences
+    preferences: state.preferences,
+    currentDateOffset: state.date
 });
 
 const dispatchProps = {
@@ -94,7 +97,8 @@ type HeaderParams = {
     classParam: string,
 };
 
-const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClasses, classesStatus, preferences, setTheme, history }) => {
+const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClasses, classesStatus, preferences, currentDateOffset, setTheme, history }) => {
+    const currentDate = addWeeks(new Date(), currentDateOffset);
     const cssStyleClasses = useStyles();
     const classParam = useParams<HeaderParams>().classParam;
     const [selectClassAnchorEl, setSelectClassAnchorEl] = useState<null | HTMLElement>(null);
@@ -188,6 +192,8 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
         </Menu>
     );
 
+    const currentStartOfWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
+    const currentEndOfWeek = endOfWeek(currentDate, { weekStartsOn: 1 });
 
     return <Toolbar className={cssStyleClasses.toolbar}>
         <Box alignSelf="left">
@@ -224,7 +230,7 @@ const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClas
             noWrap
             className={cssStyleClasses.toolbarTitle}
         >
-            Rozkład klasy {classParam}
+            Rozkład klasy {classParam} ({format(currentStartOfWeek, 'dd MMM', { locale: pl }) + ' - ' + format(currentEndOfWeek, 'dd MMM', { locale: pl })})
         </Typography>
         <div className={cssStyleClasses.sectionDesktop}>
             {themeIcon}

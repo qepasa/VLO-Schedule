@@ -1,8 +1,9 @@
+import { dateChanged } from './../date/actions';
 import { loadScheduleAsync, createGroupsAction } from './actions';
 import { Epic } from 'redux-observable';
 import { RootAction, RootState, Services, isActionOf } from 'typesafe-actions';
 import { from, of } from 'rxjs';
-import { filter, switchMap, catchError, mergeMap, concatMap } from 'rxjs/operators';
+import { filter, switchMap, catchError, mergeMap, concatMap, mapTo, withLatestFrom, map } from 'rxjs/operators';
 import { GetScheduleResponse, GroupFilter } from 'ApiModel';
 
 export const loadScheduleEpic: Epic<
@@ -12,12 +13,23 @@ export const loadScheduleEpic: Epic<
     Services
 > = (action$, state$, { api }) => action$.pipe(
     filter(isActionOf(loadScheduleAsync.request)),
-    switchMap((action) =>
-        from(api.schedule.getSchedule(action.payload)).pipe(
-            concatMap((response) => from([createGroupsAction(transformTimetableResponse(response), state$.value.preferences.class), loadScheduleAsync.success(response)])),
+    withLatestFrom(state$),
+    switchMap(([action, state]) =>
+        from(api.schedule.getSchedule(action.payload, state.date)).pipe(
+            concatMap((response) => from([createGroupsAction(transformTimetableResponse(response), state.preferences.class), loadScheduleAsync.success(response)])),
             catchError((message: string) => of(loadScheduleAsync.failure(message)))
         )
     )
+);
+
+export const onDateChanged: Epic<
+    RootAction,
+    RootAction,
+    RootState
+> = (action$, state$) => action$.pipe(
+    filter(isActionOf(dateChanged)),
+    withLatestFrom(state$),
+    map(([_, state]) => loadScheduleAsync.request(state.preferences.class))
 );
 
 
