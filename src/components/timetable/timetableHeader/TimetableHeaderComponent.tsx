@@ -16,7 +16,7 @@ const TimetableHeaderComponent: FunctionComponent<TimetableHeaderOwnProps> = mem
             {startOfLessonArray.map(startOfLesson => {
                 const hm = startOfLesson.split(':');
                 return new Date().setHours(parseInt(hm[0]), parseInt(hm[1]));
-            }).map((startOfLesson, idx) => <HeaderSlotComponent lessonIdx={idx} startOfLesson={startOfLesson} key={startOfLesson.toString()+idx.toString()}/>)}
+            }).map((startOfLesson, idx) => <HeaderSlotComponent lessonIdx={idx} startOfLesson={startOfLesson} key={startOfLesson.toString() + idx.toString()} />)}
         </div>
     </>;
 });

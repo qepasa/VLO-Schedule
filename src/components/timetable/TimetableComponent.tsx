@@ -1,7 +1,7 @@
-import { Box, makeStyles, Snackbar, Typography } from "@material-ui/core";
+import { Box, Button, IconButton, makeStyles, Typography } from "@material-ui/core";
 import { eachDayOfInterval, format } from "date-fns";
 import { endOfWeek, startOfWeek } from "date-fns/esm";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 import { RootState } from "typesafe-actions";
@@ -14,11 +14,19 @@ import ErrorIcon from '@material-ui/icons/Error';
 import { setClass } from "../../store/preferences/actions";
 import { pl } from "date-fns/locale";
 import { filteredTimetable, getTimetableSize } from "../../store/root-selectors";
-import { Alert } from "@material-ui/lab";
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { nextWeek, previousWeek, setDate } from "../../store/date/actions";
 
 const useStyles = makeStyles((theme) => ({
-    textSection: {
+    textWrapper: {
         height: '4vh',
+        width: '100%'
+    },
+    textSection: {
+        float: 'left',
+        height: 'inherit',
+        margin: theme.spacing(1),
     },
     filterAlert: {
         width: '30vw',
@@ -52,6 +60,9 @@ const dispatchProps = {
     loadTimetable: loadScheduleAsync.request,
     loadClasses: loadClassesAsync.request,
     setClass: setClass,
+    nextWeek: nextWeek,
+    prevWeek: previousWeek,
+    setDate: setDate,
 }
 
 type ScheduleParams = {
@@ -60,7 +71,7 @@ type ScheduleParams = {
 
 type ScheduleProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
 
-const TimetableComponent: FunctionComponent<ScheduleProps> = ({ timetableStatus, timetable, timetableSize, filteredTimetable, loadTimetable, loadClasses, setClass }) => {
+const TimetableComponent: FunctionComponent<ScheduleProps> = ({ timetableStatus, filteredTimetable, loadTimetable, loadClasses, setClass, nextWeek, prevWeek, setDate }) => {
     const cssStyleClasses = useStyles();
     const classParam = useParams<ScheduleParams>().classParam;
     // NOTE(pawelp): not sure if this guarantees that class will be set
@@ -75,9 +86,18 @@ const TimetableComponent: FunctionComponent<ScheduleProps> = ({ timetableStatus,
         start: startOfWeek(today, { weekStartsOn: 1 }),
         end: endOfWeek(today, { weekStartsOn: 1 }),
     });
-    const filteredSize = filteredTimetable && filteredTimetable.flat().flat().length;
     return <>
-        <Box className={cssStyleClasses.textSection}>
+        <Box className={cssStyleClasses.textWrapper}>
+            <Box className={cssStyleClasses.textSection}>
+                <IconButton size="small" onClick={() => prevWeek()}>
+                    <ArrowBackIosIcon fontSize="small"></ArrowBackIosIcon>
+                </IconButton>
+                <Button size="small" variant="outlined" onClick={() => setDate(0)}>Dzisiaj</Button>
+
+                <IconButton size="small" onClick={() => nextWeek()}>
+                    <ArrowForwardIosIcon fontSize="small"></ArrowForwardIosIcon>
+                </IconButton>
+            </Box>
         </Box>
         <Box className={cssStyleClasses.timetableWrapper}>
             <TimetableHeaderComponent />

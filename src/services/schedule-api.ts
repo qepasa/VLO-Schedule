@@ -1,8 +1,9 @@
 import { GetScheduleResponse, GetClassesResponse } from "ApiModel";
 
 
-export function getSchedule(classParam: string): Promise<GetScheduleResponse> {
-    return fetch(`https://sabat.dev/api/tta?c=${classParam}&o=0`)
+export function getSchedule(classParam: string, offset = 0): Promise<GetScheduleResponse> {
+    console.log(`got class param ${classParam} offset: ${offset}`);
+    return fetch(`https://sabat.dev/api/tta?c=${classParam}&o=${offset}`)
         .then(response => response.json());
 }
 
