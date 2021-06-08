@@ -1,4 +1,4 @@
-import { GetScheduleResponse, GetClassesResponse, GetSubstitutionsResponse } from "ApiModel";
+import { GetScheduleResponse, GetClassesResponse, GetSubstitutionsResponse, Substitution } from "ApiModel";
 
 
 export function getSchedule(classParam: string, offset = 0): Promise<GetScheduleResponse> {
@@ -14,7 +14,7 @@ export function getClasses(): Promise<GetClassesResponse> {
         .then(function (a) { return { success: true, resp: a } });
 }
 
-export function getSubstitutions(classParam: string, offset = 0): Promise<GetSubstitutionsResponse> {
+export function getSubstitutions(classParam: string, offset = 0): Promise<Substitution[]> {
     return fetch(`https://api.cld.sh/vlo/substitutions/${classParam}?offset=${offset}`)
         .then(response => response.json());
 };

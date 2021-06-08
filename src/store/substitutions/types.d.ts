@@ -7,7 +7,7 @@ declare module 'ApiModel' {
     };
 
     export type LoadSubstitutionsAsyncSuccessPayload = {
-        response: GetSubstitutionsResponse,
+        response: Substitution[],
         dayOfWeek: number,
     };
 

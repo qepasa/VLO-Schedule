@@ -1,4 +1,4 @@
-import { Divider, ListItem, ListItemText, makeStyles, Typography } from "@material-ui/core";
+import { Divider, List, ListItem, ListItemText, makeStyles, Typography } from "@material-ui/core";
 import { GetSubstitutionsResponse, Substitution } from "ApiModel";
 import { format } from "date-fns";
 import { pl } from "date-fns/locale";
@@ -27,21 +27,17 @@ const SingleDaySubstitutionComponent: FunctionComponent<SingleDaySubstitutionPro
             <ListItemText
                 primary={formattedDate}
                 secondary={
-                    <React.Fragment>
-                        {/* <Typography
-                            component="span"
-                            variant="body2"
-                            className={cssStyleClasses.inline}
-                            color="textPrimary"
-                        >
-                            Ali Connors
-              </Typography>
-                        {" — I'll be in your neighborhood doing errands this…"} */}
-                    </React.Fragment>
+                    <List>
+                        {(substitution && substitution.length > 0) ? substitution.map(sub =>
+                            <ListItem>
+                                <ListItemText>Lekcja {sub.time_signature}</ListItemText>
+                                <ListItemText>{sub.comment}</ListItemText>
+                            </ListItem>
+                        ) : <ListItem><ListItemText>Brak zastępstw</ListItemText></ListItem>}
+                    </List>
                 }
             />
         </ListItem>
-        {JSON.stringify(substitution)}
         <Divider variant="inset" component="li" /></>;
 }
 

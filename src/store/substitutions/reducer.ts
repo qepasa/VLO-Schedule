@@ -15,15 +15,14 @@ export const isLoadingSubstitutions = createReducer({ loading: 0, error: false }
 
 export const substitutions = createReducer(Array<Substitution[]>(7) as WeekSubstitutions)
     .handleAction(loadSubstitutionsAsync.success, (state, action) => {
-        console.log(`Hello there: ${action}`);
-        state[action.payload.dayOfWeek] = action.payload.response.substitutions;
+        console.log(action);
+        state[action.payload.dayOfWeek] = action.payload.response;
         return { ...state };
     });
 
 const substitutionsReducer = combineReducers({
     isLoadingSubstitutions,
     substitutions,
-    // groups,
 });
 
 export default substitutionsReducer;
