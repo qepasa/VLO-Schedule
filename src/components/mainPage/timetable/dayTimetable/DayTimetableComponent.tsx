@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { DaySchedule, Lesson } from 'ApiModel';
 import { format } from "date-fns";
-import { lcm } from "../../../utils/math-utils";
+import { lcm } from "../../../../utils/math-utils";
 import LessonComponent from "../hourTimetable/LessonComponent";
 import { pl } from "date-fns/locale";
 

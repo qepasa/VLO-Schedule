@@ -1,6 +1,6 @@
 import { createGroupsAction } from './../schedule/actions';
 import storage from 'redux-persist/lib/storage';
-import { addGroup, removeGroup, setClass, setTheme } from './actions';
+import { addGroup, removeGroup, setClass, setTheme, updateClass } from './actions';
 import { createReducer } from 'typesafe-actions';
 import { persistCombineReducers } from 'redux-persist';
 import { GroupFiltersByClass } from 'ApiModel';
@@ -12,7 +12,7 @@ export const themeReducer = createReducer('')
     });
 
 export const classReducer = createReducer('')
-    .handleAction(setClass, (state, action) => {
+    .handleAction(updateClass, (state, action) => {
         return action.payload;
     });
 

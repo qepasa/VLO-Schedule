@@ -3,7 +3,7 @@ import { Lesson } from 'ApiModel';
 import React, { FunctionComponent, memo, useState } from 'react';
 import useFitText from 'use-fit-text';
 import HourDialogComponent from './HourDialogComponent';
-import { getContrast } from '../../../utils/math-utils';
+import { getContrast } from '../../../../utils/math-utils';
 
 type LessonComponentOwnProps = {
     lesson: Lesson;
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 const LessonComponent: FunctionComponent<LessonComponentProps> = memo(({ lesson, height, lessonsByHour, currentWeekInterval }) => {
     const cssStyleClasses = useStyles();
-    const { fontSize, ref } = useFitText({logLevel: "none", minFontSize: 5});
+    const { fontSize, ref } = useFitText({ logLevel: "none", minFontSize: 5 });
     const [open, setOpen] = useState(false);
     const [dialogData, setDialogData] = useState<Lesson[]>([]);
     const [lessonNumber, setLessonNumber] = useState<number>(0);
@@ -63,7 +63,7 @@ const LessonComponent: FunctionComponent<LessonComponentProps> = memo(({ lesson,
             <div style={{ float: 'left', textAlign: 'left' }}>{lesson.classroom}</div>
             <div style={{ float: 'right', textAlign: 'right' }}>{lesson.group}</div>
         </div>
-        <HourDialogComponent lessons={dialogData} lessonNumber={lessonNumber} dayIndex={lesson.day_index} onClose={handleClose} open={open} currentWeekInterval={currentWeekInterval}/>
+        <HourDialogComponent lessons={dialogData} lessonNumber={lessonNumber} dayIndex={lesson.day_index} onClose={handleClose} open={open} currentWeekInterval={currentWeekInterval} />
     </div>;
 });
 

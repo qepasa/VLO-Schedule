@@ -10,8 +10,9 @@ import {
 import { RootState } from "typesafe-actions";
 import PageFooterComponent from "./components/PageFooterComponent";
 import PageHeaderComponent from "./components/PageHeaderComponent";
-import TimetableComponent from "./components/timetable/TimetableComponent";
+import TimetableComponent from "./components/mainPage/timetable/TimetableComponent";
 import { setTheme } from "./store/preferences/actions";
+import SubstitutionsComponent from "./components/mainPage/substitutions/SubstitutionsComponent";
 
 const mapStateToProps = (state: RootState) => ({
   preferences: state.preferences
@@ -84,6 +85,15 @@ const App: FunctionComponent<AppProps> = ({ preferences, setTheme }) => {
               <div style={{ flex: "1 0 auto" }}>
                 <PageHeaderComponent />
                 <TimetableComponent />
+              </div>
+              <PageFooterComponent />
+            </div>
+          </Route>
+          <Route path="/substitutions/:classParam">
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+              <div style={{ flex: "1 0 auto" }}>
+                <PageHeaderComponent />
+                <SubstitutionsComponent />
               </div>
               <PageFooterComponent />
             </div>

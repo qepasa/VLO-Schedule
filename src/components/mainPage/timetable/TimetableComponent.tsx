@@ -3,20 +3,24 @@ import { eachDayOfInterval, format } from "date-fns";
 import { endOfWeek, startOfWeek } from "date-fns/esm";
 import React, { FunctionComponent, useEffect } from "react";
 import { connect } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { RootState } from "typesafe-actions";
-import { loadClassesAsync } from "../../store/classes/actions";
-import { loadScheduleAsync } from "../../store/schedule/actions";
+import { loadClassesAsync } from "../../../store/classes/actions";
+import { loadScheduleAsync } from "../../../store/schedule/actions";
 import DayTimetableComponent from "./dayTimetable/DayTimetableComponent";
 import TimetableHeaderComponent from "./timetableHeader/TimetableHeaderComponent";
 import Skeleton from '@material-ui/lab/Skeleton';
 import ErrorIcon from '@material-ui/icons/Error';
-import { setClass } from "../../store/preferences/actions";
+import { setClass } from "../../../store/preferences/actions";
 import { pl } from "date-fns/locale";
-import { filteredTimetable, getTimetableSize } from "../../store/root-selectors";
+import { filteredTimetable, getTimetableSize } from "../../../store/root-selectors";
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { nextWeek, previousWeek, setDate } from "../../store/date/actions";
+import { nextWeek, previousWeek, setDate } from "../../../store/date/actions";
+import { loadSubstitutionsAsync } from "../../../store/substitutions/actions";
+import { GetCurrentDateInPoland } from "../../../utils/time-utils";
+import Navbar from "../navbar/Navbar";
+import currentClassDataLoader from "../../hoc/with-current-class-data";
 
 const useStyles = makeStyles((theme) => ({
     textWrapper: {
@@ -25,6 +29,11 @@ const useStyles = makeStyles((theme) => ({
     },
     textSection: {
         float: 'left',
+        height: 'inherit',
+        margin: theme.spacing(1),
+    },
+    switchViewsButton: {
+        float: 'right',
         height: 'inherit',
         margin: theme.spacing(1),
     },
@@ -59,6 +68,7 @@ const mapStateToProps = (state: RootState) => ({
 const dispatchProps = {
     loadTimetable: loadScheduleAsync.request,
     loadClasses: loadClassesAsync.request,
+    loadSubstitutions: loadSubstitutionsAsync.request,
     setClass: setClass,
     nextWeek: nextWeek,
     prevWeek: previousWeek,
@@ -71,34 +81,23 @@ type ScheduleParams = {
 
 type ScheduleProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
 
-const TimetableComponent: FunctionComponent<ScheduleProps> = ({ timetableStatus, filteredTimetable, loadTimetable, loadClasses, setClass, nextWeek, prevWeek, setDate }) => {
+const TimetableComponent: FunctionComponent<ScheduleProps> = ({ timetableStatus, filteredTimetable, loadTimetable, loadClasses, loadSubstitutions, setClass, nextWeek, prevWeek, setDate }) => {
     const cssStyleClasses = useStyles();
     const classParam = useParams<ScheduleParams>().classParam;
-    // NOTE(pawelp): not sure if this guarantees that class will be set
-    // **before** we dispatch `loadTimetable`. If any errors occur we could create
-    // epic for `setClass` that triggers loadTimetable. For now 
-    useEffect(() => { setClass(classParam); }, [setClass, classParam]);
-    useEffect(() => { loadClasses(); }, [loadClasses]);
-    useEffect(() => { loadTimetable(classParam); }, [loadTimetable, classParam]);
+    let history = useHistory();
 
-    const today = new Date();
+    useEffect(() => { setClass(classParam); }, [setClass, classParam]);
+
+    const today = GetCurrentDateInPoland();
     const daysInCurrentWeek: Date[] = eachDayOfInterval({
         start: startOfWeek(today, { weekStartsOn: 1 }),
         end: endOfWeek(today, { weekStartsOn: 1 }),
     });
+    const onNavButtonClick = () => {
+        history.push(`/substitutions/${classParam}`);
+    };
     return <>
-        <Box className={cssStyleClasses.textWrapper}>
-            <Box className={cssStyleClasses.textSection}>
-                <IconButton size="small" onClick={() => prevWeek()}>
-                    <ArrowBackIosIcon fontSize="small"></ArrowBackIosIcon>
-                </IconButton>
-                <Button size="small" variant="outlined" onClick={() => setDate(0)}>Dzisiaj</Button>
-
-                <IconButton size="small" onClick={() => nextWeek()}>
-                    <ArrowForwardIosIcon fontSize="small"></ArrowForwardIosIcon>
-                </IconButton>
-            </Box>
-        </Box>
+        <Navbar navigationButtonText="Zastępstwa" onNavButtonClick={onNavButtonClick} />
         <Box className={cssStyleClasses.timetableWrapper}>
             <TimetableHeaderComponent />
             {timetableStatus.loading

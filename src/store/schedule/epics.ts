@@ -1,9 +1,10 @@
+import { updateClass } from './../preferences/actions';
 import { dateChanged } from './../date/actions';
 import { loadScheduleAsync, createGroupsAction } from './actions';
 import { Epic } from 'redux-observable';
 import { RootAction, RootState, Services, isActionOf } from 'typesafe-actions';
 import { from, of } from 'rxjs';
-import { filter, switchMap, catchError, mergeMap, concatMap, mapTo, withLatestFrom, map } from 'rxjs/operators';
+import { filter, switchMap, catchError, concatMap, withLatestFrom, map } from 'rxjs/operators';
 import { GetScheduleResponse, GroupFilter } from 'ApiModel';
 
 export const loadScheduleEpic: Epic<
@@ -32,6 +33,16 @@ export const onDateChanged: Epic<
     map(([_, state]) => loadScheduleAsync.request(state.preferences.class))
 );
 
+export const onClassChanged: Epic<
+    RootAction,
+    RootAction,
+    RootState
+> = (action$, state$) => action$.pipe(
+    filter(isActionOf(updateClass)),
+    withLatestFrom(state$),
+    switchMap(([, state]) => of(loadScheduleAsync.request(state.preferences.class))
+    )
+);
 
 function transformTimetableResponse(response: GetScheduleResponse): GroupFilter {
     console.time('transformTimetableResponse');

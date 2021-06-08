@@ -3,7 +3,7 @@ import { Lesson } from 'ApiModel';
 import { Button, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@material-ui/core";
 import { pl } from "date-fns/locale";
 import { format } from "date-fns";
-import { capitalizeFirstLetter } from "../../../utils/string-uitls";
+import { capitalizeFirstLetter } from "../../../../utils/string-uitls";
 
 type HourDialogComponentOwnProps = {
     lessons: Lesson[];
@@ -38,14 +38,14 @@ const HourDialogComponent: FunctionComponent<HourDialogComponentProps> = memo(({
                                 <ListItemText
                                     primary={`${lesson.subject}${lesson.group ? " - " + lesson.group : ""}`}
                                     secondary={<>
-                                        <Typography component="a" variant="body2" key={key+"Teacher"}>Nauczyciel: {lesson.teacher}</Typography>
+                                        <Typography component="a" variant="body2" key={key + "Teacher"}>Nauczyciel: {lesson.teacher}</Typography>
                                         <br />
-                                        <Typography component="a" variant="body2" key={key+"Classroom"}>Sala: {lesson.classroom}</Typography>
+                                        <Typography component="a" variant="body2" key={key + "Classroom"}>Sala: {lesson.classroom}</Typography>
                                     </>}
-                                    key={key+"ListItemText"}
+                                    key={key + "ListItemText"}
                                 />
                             </ListItem>
-                            <Divider variant="middle" component="li" key={key+"Divider"} />
+                            <Divider variant="middle" component="li" key={key + "Divider"} />
                         </>)
                     })}
                 </List>
