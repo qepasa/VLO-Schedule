@@ -1,5 +1,5 @@
 import { Box, Button, IconButton, makeStyles, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@material-ui/core";
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import Skeleton from '@material-ui/lab/Skeleton';
 import { RouteComponentProps, useParams, withRouter } from "react-router-dom";
 import SchoolIcon from '@material-ui/icons/School';
@@ -15,8 +15,10 @@ import ErrorIcon from '@material-ui/icons/Error';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SettingsDialogComponent from "./settings/SettingsDialogComponent";
-import { addWeeks, endOfWeek, format, lightFormat, startOfWeek } from "date-fns";
+import { addWeeks, endOfWeek, format, startOfWeek } from "date-fns";
 import { pl } from "date-fns/locale";
+import { loadClassesAsync } from "../store/classes/actions";
+import { GetCurrentDateInPoland } from "../utils/time-utils";
 
 const getThemeIcon = (theme: string, themeClicked: () => void) => {
     if (theme === 'light') {
@@ -89,6 +91,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const dispatchProps = {
     setTheme: setTheme,
+    loadClasses: loadClassesAsync.request,
 };
 
 type PageHeaderProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps & RouteComponentProps;
@@ -97,13 +100,15 @@ type HeaderParams = {
     classParam: string,
 };
 
-const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClasses, classesStatus, preferences, currentDateOffset, setTheme, history }) => {
-    const currentDate = addWeeks(new Date(), currentDateOffset);
+const PageHeaderComponent: FunctionComponent<PageHeaderProps> = ({ availableClasses, classesStatus, preferences, currentDateOffset, setTheme, loadClasses, history }) => {
+    const currentDate = addWeeks(GetCurrentDateInPoland(), currentDateOffset);
     const cssStyleClasses = useStyles();
     const classParam = useParams<HeaderParams>().classParam;
     const [selectClassAnchorEl, setSelectClassAnchorEl] = useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
+
+    useEffect(() => { loadClasses(); }, []);
 
     const selectClassOpen = Boolean(selectClassAnchorEl);
     const mobileOpen = Boolean(mobileMoreAnchorEl);

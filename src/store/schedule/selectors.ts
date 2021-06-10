@@ -1,4 +1,3 @@
-import { filter } from 'rxjs/operators';
 import { GroupFilter, WeekSchedule } from 'ApiModel';
 import { ScheduleState } from './reducer';
 
@@ -10,7 +9,7 @@ export const filteredTimetable = (state: ScheduleState, groupFilters: GroupFilte
     const timetable = state.schedule;
 
     if (timetable.length === 0) return [];
-    if(groupFilters === undefined) return timetable;
+    if (groupFilters === undefined) return timetable;
 
     const filteredTimetable: WeekSchedule = JSON.parse(JSON.stringify(timetable));
     for (let dayIdx = 0; dayIdx < filteredTimetable.length; ++dayIdx) {

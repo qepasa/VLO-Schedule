@@ -28,6 +28,13 @@ declare module 'ApiModel' {
         success: boolean,
         resp: string[],
     };
+
+    export type Substitution = {
+        time_signature: string,
+        comment: string,
+    };
+
+    export type WeekSubstitutions = Array<Substitution[]>;
 };
 
 declare module 'typesafe-actions' {

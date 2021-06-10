@@ -1,4 +1,4 @@
-import { Button, Checkbox, createStyles, List, ListItem, ListItemIcon, ListItemText, ListSubheader, makeStyles, Theme, Typography } from "@material-ui/core";
+import { Checkbox, createStyles, List, ListItem, ListItemIcon, ListItemText, ListSubheader, makeStyles, Theme, Typography } from "@material-ui/core";
 import React, { FunctionComponent, memo } from "react";
 import { RootState } from "typesafe-actions";
 import { connect } from "react-redux";
@@ -54,7 +54,7 @@ const GroupFiltersComponent: FunctionComponent<GroupFiltersProps> = memo(({ grou
 
     return <>
         <Typography color="error" variant="h6">
-            Uwaga! Ta funkcjonalność jest eksperymentalna. 
+            Uwaga! Ta funkcjonalność jest eksperymentalna.
         </Typography>
         <Typography>
             Upewnij się, że plan lekcji po zastosowaniu filtrów wygląda tak jak się spodziewasz.
