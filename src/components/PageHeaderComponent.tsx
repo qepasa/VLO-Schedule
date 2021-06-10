@@ -15,7 +15,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SettingsDialogComponent from "./settings/SettingsDialogComponent";
-import { addWeeks, endOfWeek, format, lightFormat, startOfWeek } from "date-fns";
+import { addWeeks, endOfWeek, format, startOfWeek } from "date-fns";
 import { pl } from "date-fns/locale";
 import { loadClassesAsync } from "../store/classes/actions";
 import { GetCurrentDateInPoland } from "../utils/time-utils";

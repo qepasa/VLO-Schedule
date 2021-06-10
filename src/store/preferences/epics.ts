@@ -16,7 +16,7 @@ export const updateClassEpic: Epic<
             filter(isActionOf(setClass)),
             withLatestFrom(state$),
             switchMap(([action, state]) =>
-                iif(() => action.payload != state.preferences.class,
+                iif(() => action.payload !== state.preferences.class,
                     of(updateClass(action.payload)),
                     EMPTY)
             )

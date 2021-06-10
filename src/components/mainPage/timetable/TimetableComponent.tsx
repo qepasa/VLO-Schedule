@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, makeStyles, Typography } from "@material-ui/core";
+import { Box, makeStyles, Typography } from "@material-ui/core";
 import { eachDayOfInterval, format } from "date-fns";
 import { endOfWeek, startOfWeek } from "date-fns/esm";
 import React, { FunctionComponent, useEffect } from "react";
@@ -14,13 +14,10 @@ import ErrorIcon from '@material-ui/icons/Error';
 import { setClass } from "../../../store/preferences/actions";
 import { pl } from "date-fns/locale";
 import { filteredTimetable, getTimetableSize } from "../../../store/root-selectors";
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { nextWeek, previousWeek, setDate } from "../../../store/date/actions";
 import { loadSubstitutionsAsync } from "../../../store/substitutions/actions";
 import { GetCurrentDateInPoland } from "../../../utils/time-utils";
 import Navbar from "../navbar/Navbar";
-import currentClassDataLoader from "../../hoc/with-current-class-data";
 
 const useStyles = makeStyles((theme) => ({
     textWrapper: {
@@ -81,7 +78,7 @@ type ScheduleParams = {
 
 type ScheduleProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
 
-const TimetableComponent: FunctionComponent<ScheduleProps> = ({ timetableStatus, filteredTimetable, loadTimetable, loadClasses, loadSubstitutions, setClass, nextWeek, prevWeek, setDate }) => {
+const TimetableComponent: FunctionComponent<ScheduleProps> = ({ timetableStatus, filteredTimetable, setClass }) => {
     const cssStyleClasses = useStyles();
     const classParam = useParams<ScheduleParams>().classParam;
     let history = useHistory();

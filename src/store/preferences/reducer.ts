@@ -1,6 +1,6 @@
 import { createGroupsAction } from './../schedule/actions';
 import storage from 'redux-persist/lib/storage';
-import { addGroup, removeGroup, setClass, setTheme, updateClass } from './actions';
+import { addGroup, removeGroup, setTheme, updateClass } from './actions';
 import { createReducer } from 'typesafe-actions';
 import { persistCombineReducers } from 'redux-persist';
 import { GroupFiltersByClass } from 'ApiModel';

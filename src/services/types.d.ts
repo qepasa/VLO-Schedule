@@ -29,10 +29,6 @@ declare module 'ApiModel' {
         resp: string[],
     };
 
-    export type GetSubstitutionsResponse = {
-        substitutions: Substitution[],
-    };
-
     export type Substitution = {
         time_signature: string,
         comment: string,

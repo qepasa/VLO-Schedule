@@ -1,9 +1,9 @@
-import { Box, Button, createStyles, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles, Tab, Tabs, Theme, Typography } from "@material-ui/core";
+import { Button, createStyles, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles, Tab } from "@material-ui/core";
 import { TabContext, TabList, TabPanel } from "@material-ui/lab";
 import React, { FunctionComponent, useState } from "react";
 import GroupFiltersComponent from "./GroupFiltersComponent";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         root: {
             minHeight: '50vh',

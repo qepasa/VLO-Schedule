@@ -14,7 +14,6 @@ import ErrorIcon from '@material-ui/icons/Error';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
-        backgroundColor: theme.palette.background.paper,
     },
     inline: {
         display: 'inline',

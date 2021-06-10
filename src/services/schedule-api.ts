@@ -1,4 +1,4 @@
-import { GetScheduleResponse, GetClassesResponse, GetSubstitutionsResponse, Substitution } from "ApiModel";
+import { GetScheduleResponse, GetClassesResponse, Substitution } from "ApiModel";
 
 
 export function getSchedule(classParam: string, offset = 0): Promise<GetScheduleResponse> {

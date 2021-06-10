@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { GetSubstitutionsResponse, SubstitutionsStatus, Substitution, WeekSubstitutions } from "ApiModel";
+import { SubstitutionsStatus, Substitution, WeekSubstitutions } from "ApiModel";
 import { createReducer } from 'typesafe-actions';
 import { loadSubstitutionsAsync } from './actions';
 
