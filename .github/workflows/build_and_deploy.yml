@@ -28,9 +28,16 @@ jobs:
         with:
           node-version: '14.x'
           
-      - name: npm install and deploy
+      - name: npm install
         run: | 
           npm install
-          npm run deploy
         env:
           CI: false
+          
+      - name: Deploy with gh-pages
+        run: |
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
+        env:
+          CI: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
