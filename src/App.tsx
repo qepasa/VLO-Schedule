@@ -99,7 +99,7 @@ const App: FunctionComponent<AppProps> = ({ preferences, setTheme }) => {
             </div>
           </Route>
           <Route path="/">
-            <Redirect to="/timetable/1A" />
+            <Redirect to="/timetable/1_1A" />
           </Route>
         </Switch>
       </HashRouter>
