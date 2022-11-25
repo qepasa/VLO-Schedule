@@ -17,7 +17,7 @@ const PageFooterComponent: FunctionComponent = () => {
     return <footer className={classes.footer}>
         <Typography variant="caption" align="center" gutterBottom>
             <div className={classes.footerText}>
-                <Link target="_blank" href="https://github.com/cloud11665/vlo.rocks-api" color="secondary">API rozkładu zajęć</Link>
+                <Link target="_blank" href="https://github.com/cloud11665/vlott" color="secondary">API rozkładu zajęć</Link>
                 &nbsp;stworzone przez&nbsp;
                 <Link target="_blank" href="https://github.com/cloud11665" color="secondary">cloud11665</Link>
                 ,&nbsp;
